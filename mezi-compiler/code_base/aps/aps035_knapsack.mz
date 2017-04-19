@@ -1,0 +1,85 @@
+
+
+class Item
+{
+	v:int // value
+	w:int // weight
+	
+	fn Item(v:int, w:int){
+		this.v = v
+		this.w = w
+	}
+}
+
+
+class Knapsack
+{
+	items:Item[]
+	maxw:int
+	memo:int[][] // max vaue for i with w
+	
+	
+	fn Knapsack(items:Item[], maxw:int)
+	{
+		this.items = items
+		this.maxw = maxw
+		memo = int[items.length][]
+		for( i = 0 ; i < items.length ; i++)
+			memo[i] = int[maxw+1]
+	}
+	
+	fn findMaxValueItems()
+	{
+		for( i = 0 ; i < items.length ; i++ )
+		{
+			for( w = 0 ; w <= maxw ; w++ )
+			{
+				if( i == 0 ) { 
+					memo[i][w] = 0
+					continue
+				}
+				
+				v1 = 0, v2 = 0
+	
+				v1 = memo[i-1][w] // item 'i' is not selected, so v is the one of i-1 with w
+	
+				if( w >= items[i].w ) // item 'i' is selected
+				{
+					v2 = items[i].v + memo[i-1][ w - items[i].w ]
+				}
+	
+				// Branch Frame Checking Bug(workaroud applied)
+				memo[i][w] = if( v1 > v2 ) v1 else v2
+				
+				/*
+				if( v1 > v2 )
+					memo[i][w] = v1
+				else
+					memo[i][w] = v2
+				*/	
+			}
+		}
+		
+		return memo[items.length-1][maxw]
+	}
+	
+}
+
+
+
+
+class ApsKnapsack
+{
+	static fn main(args:String[])
+	{
+		items = Item[4]
+			items[0] = Item(10, 5) // item 0 (value:10, weight:5)
+			items[1] = Item(40, 4) // item 1 (value:40, weight:4)
+			items[2] = Item(30, 6) // item 2 (value:30, weight:6)
+			items[3] = Item(50, 3) // item 3 (value:50, weight:3)
+		
+		dp = Knapsack(items, 10)   		// knapsack maximum weight is 10	 
+		maxv = dp.findMaxValueItems()   // find maximum value items
+		System.out.println("maxv="+maxv)
+	}
+}

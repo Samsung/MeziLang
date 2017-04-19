@@ -1,0 +1,45 @@
+
+
+/*
+class ListCont {
+	l:java.util.LinkedList
+	fn ListCont() { l = java.util.LinkedList() }
+
+	fn +(a:int) := l.add( Integer(a) )
+
+	fn toString(){
+		buf = StringBuffer()
+		for( i = 0 ; i < l.size() ; i++)
+		{
+			buf.append( (Integer<-l.get(i)).toString() + " " )
+		}
+		return buf.toString()
+	}
+}
+
+class ExOperatorOverload {
+	static fn main(args: String[]) {
+		lc = ListCont()
+		lc + 10
+		lc + 20
+		System.out.println( lc )
+	}
+
+}
+*/
+
+	class ListCont {
+		l:java.util.LinkedList
+		fn ListCont() { l = java.util.LinkedList() }
+
+		fn +(a:int) := l.add( Integer(a) )
+
+	}
+
+	class ExOperatorOverload {
+		static fn main(args: String[]) {
+			lc = ListCont()
+			lc + 10
+			lc + 20
+		}
+	}

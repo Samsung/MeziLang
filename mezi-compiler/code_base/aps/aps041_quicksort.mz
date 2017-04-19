@@ -1,0 +1,70 @@
+
+class ApsQuickSort
+{
+	static fn print_intarr( a:int[], st_idx:int, end_idx:int )
+	{
+		System.out.print("[")
+		for( i = st_idx ; i <= end_idx ; i++ )
+		{
+			System.out.print(""+a[i]+", ")
+		}	
+		System.out.println("]")
+	}
+
+
+	static fn swap(arr:int[], i:int, j:int )
+	{
+		tmp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = tmp
+	}
+
+	// Hoare-Partition Algorithm
+	static fn partition(a:int[], l:int, r:int)
+	{
+		p = a[l]
+		i = l 
+		j = r
+		
+		for( ; i <= j ; )
+		{
+			for( ; i <= r && a[i] <= p ; ) { i++ }
+			
+			for( ; l <= j && a[j] >= p ; ) { j-- }
+			
+			if( i < j ) swap(a, i, j)
+		}
+		
+		if( l < j ) swap(a, l, j)
+		
+		return j
+	}
+
+
+	static fn quick_sort(a:int[], l:int, r:int)
+	{
+		if( l < r )	{
+		
+			s = partition(a, l, r)
+			
+			if( s < l || r < s ) return
+			
+			quick_sort(a, l, s - 1)
+			quick_sort(a, s + 1, r)
+		}
+	}
+
+
+	static fn main(args:String[])
+	{
+		a = { 6 2 5 8 1 7 10 3 4 11 }.toIntArray()
+		
+		System.out.print("before sort") print_intarr(a, 0, 9)
+
+		quick_sort(a, 0, 9)
+
+		System.out.print(" after sort") print_intarr(a, 0, 9)
+	}
+}
+
+

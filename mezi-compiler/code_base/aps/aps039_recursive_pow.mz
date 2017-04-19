@@ -1,0 +1,29 @@
+
+class ApsRecursivePower
+{
+	
+	// devide & conquerer
+	static fn recursive_power(x:int, n:int)
+	{
+		if( n == 1 ) return x
+		
+		if( ( n % 2 ) == 0 )
+		{
+			y = recursive_power(x, n/2)
+			return y * y
+		}
+		else
+		{
+			y = recursive_power(x, (n-1)/2)
+			return y * y * x
+		}	
+	}
+
+	static fn main(args:String[])
+	{
+		System.out.println("2^10=" +  recursive_power( 2, 10 ) )
+
+	}
+}
+
+

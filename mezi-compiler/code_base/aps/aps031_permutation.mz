@@ -1,0 +1,45 @@
+
+class ApsPermutation
+{
+	static fn print_intarr( a:int[] )
+	{
+		System.out.print("[")
+		for( i = 0 ; i < a.length ; i++ )
+			System.out.print(""+a[i]+", ")
+		System.out.println("]")
+	}
+
+	static fn swap(i:int, j:int, arr:int[] )
+	{
+		tmp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = tmp
+	}
+
+	static fn permutation(n:int, k:int, arr:int[])
+	{
+		if( n == k )
+		{
+			print_intarr(arr)		
+		}
+		else
+		{
+			for( i = k ; i < n ; i++)
+			{ 
+				swap(k, i, arr)
+				permutation(n, k + 1, arr )
+				swap(k, i, arr)
+			}
+		}
+	}
+
+
+	// generate permutation
+	static fn main(args:String[])
+	{
+		arr = { 1 2 3 4 5 6 }.toIntArray()	
+			
+		permutation(6, 0, arr)
+	}
+
+}

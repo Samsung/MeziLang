@@ -1,0 +1,14 @@
+CLEAR_CONSOLE=false
+FORMAT_BEFORE_SAVE=false
+JAVACC_OPTIONS=-JDK_VERSION\=1.8
+JJDOC_OPTIONS=
+JJTREE_OPTIONS=
+JJ_NATURE=false
+JTB_OPTIONS=
+KEEP_DEL_FILES_IN_HISTORY=false
+MARK_GEN_FILES_AS_DERIVED=true
+RUNTIME_JJJAR=D\:\\my_folder\\904_workspace\\eclipse\\mezi_lang_maven\\eclipse-java-mars-1-win32-x86_64\\eclipse\\plugins\\sf.eclipse.javacc_1.5.33\\jars\\javacc-5.0.jar
+RUNTIME_JTBJAR=D\:\\my_folder\\904_workspace\\eclipse\\mezi_lang_maven\\eclipse-java-mars-1-win32-x86_64\\eclipse\\plugins\\sf.eclipse.javacc_1.5.33\\jars\\jtb-1.4.11.jar
+RUNTIME_JVMOPTIONS=
+SUPPRESS_WARNINGS=false
+eclipse.preferences.version=1

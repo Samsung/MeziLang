@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>Mezi</groupId>
+  <artifactId>mezi-compiler</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>mezi-compiler</name>
+  <description>mezi language compiler</description>
+  
+  <properties>
+    <javaVersion>1.8</javaVersion>
+    <asmVersion>5.0.3</asmVersion>
+    <slf4jVersion>1.7.22</slf4jVersion>
+    <log4jVersion>1.2.16</log4jVersion>
+  </properties>
+  
+  
+  <dependencies>
+	<dependency>
+	    <groupId>org.ow2.asm</groupId>
+	    <artifactId>asm-all</artifactId>
+	    <version>${asmVersion}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.ow2.asm</groupId>
+	    <artifactId>asm-debug-all</artifactId>
+	    <version>${asmVersion}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+		<version>${slf4jVersion}</version>
+	</dependency>
+	<dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>${log4jVersion}</version>
+		<scope>runtime</scope>
+	</dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${javaVersion}</source>
+          <target>${javaVersion}</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+</project>

@@ -1,0 +1,39 @@
+
+class ApsCombination
+{
+	static fn print_intarr( a:int[] )
+	{
+		System.out.print("[")
+		for( i = 0 ; i < a.length ; i++ )
+			System.out.print(""+a[i]+", ")
+		System.out.println("]")
+	}
+
+
+	static fn combination(n:int, r:int, an:int[], tr:int[])
+	{
+		if( r == 0 ) print_intarr(tr)
+		else if ( n < r ) 
+			return
+		else
+		{
+			tr[ r - 1] = an[ n - 1]
+			combination( n - 1, r - 1, an, tr)
+			combination( n - 1, r, an, tr)
+		}
+	}
+
+
+	// generate combination
+	static fn main(args:String[])
+	{
+		arr = { 1 2 3 4 5 6 }.toIntArray()	
+
+		tr = int[3]
+
+		// generate combination selecting 3 elements from 6 elements
+		combination(6, 3, arr, tr)
+	}
+}
+
+
