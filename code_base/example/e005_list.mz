@@ -1,0 +1,39 @@
+
+class List {
+
+	static fn main( args : String[] ) {
+		
+		list = { 1, 2, 3, 4, 5 }.toList()
+		System.out.println("list=" + list)
+		
+		
+		list_var  = { 1, 2, 3, 4, 5 }.toList()
+		list.add( 6 )
+
+		array_var = { 1, 2, 3, 4, 5 }.toArray()
+		System.out.println( array_var[0] ) 
+		
+		
+		list.add( 6 )
+		System.out.println("list=" + list)
+
+		arr = { 1, 2, 3, 4, 5 }.toArray()
+		System.out.println("arr=" + arr)
+		
+		
+		list = { 1, 2, 3, 4, 5 }.toList()
+		list.remove( 0 )
+		System.out.println("list=" + list)
+	
+		/*
+		list1 = mezi.util.LangList( { 1, 2, 3, 4, 5 } )
+		list2 = mezi.util.LangList( { 6, 7, 8, 9, 10 } )
+
+		list3 = list1 + list2
+		
+		System.out.println("list3=" + list3)
+		*/
+		
+	}	
+
+}

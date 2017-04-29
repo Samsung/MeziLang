@@ -1,0 +1,158 @@
+
+
+class ApsBitPrint
+{
+	static fn bitprint(c:int)
+	{
+		System.out.printf("%3d=", c)
+		
+		for( i = 7 ; i >= 0 ; i--)
+		{
+			System.out.print(
+				if( ( c & ( 1 << i ) ) == 0 ) "0" else "1" 
+			)
+		}	
+			
+		System.out.println()		 	
+	}
+
+
+	/*
+	 It will print bit stream as follows 
+	 
+	-5=11111011
+	-4=11111100
+	-3=11111101
+	-2=11111110
+	-1=11111111
+	 0=00000000
+	 1=00000001
+	 2=00000010
+	 3=00000011
+	 4=00000100
+	 5=00000101
+	 */
+	static fn intbitprint()
+	{
+		for( i = -5 ; i < 6 ; i++)
+			bitprint( i )
+	}
+
+
+	/*
+	 It will print bit stream as follows 
+
+	      a: 134=10000110
+	    key: 170=10101010
+	  a^key:  44=00101100
+	 a^=key:  44=00101100
+	 a^=key: 134=10000110
+	 */
+	static fn bitxor_op()
+	{
+		a = 0x86
+		key = 0xAA
+		
+		System.out.print("      a: ")
+		bitprint(a)
+
+		System.out.print("    key: ")
+		bitprint(key)
+
+		System.out.print("  a^key: ")
+		bitprint(a^key)
+		
+		System.out.print(" a^=key: ")
+		bitprint(a^=key)
+
+		System.out.print(" a^=key: ")
+		bitprint(a^=key)
+	
+	}
+
+	// jvm byte is 1 byte
+	static fn pack_byte(a:byte, b:byte, c:byte, d:byte)
+	{
+		p:int = a
+		p = ( p << 8 ) | b
+		p = ( p << 8 ) | c
+		p = ( p << 8 ) | d
+		
+		System.out.printf("p=0x%x\n", p)
+		return p
+	}
+
+	
+	static fn unpack_byte(p:int, k:int)
+	{
+		n = k * 8
+		mask = 	0xFF
+		mask <<= n
+		return ((p & mask) >> n )
+	}
+
+
+	// jvm char is 2 byte
+	static fn pack_char(a:char, b:char)
+	{
+		p:int = a
+		p = ( p << 16 ) | b
+		
+		System.out.printf("p=0x%08x\n", p)
+		return p
+	}
+
+	
+	static fn unpack_char(p:int, k:int)
+	{
+		n = k * 16
+		mask = 	0xFFFF
+		mask <<= n
+		return ((p & mask) >> n )
+	}
+
+
+	/*
+	It will print as follows
+	p=0x610062
+	0x61
+	0x62
+	p=0x1020304
+	0x1
+	0x2
+	0x3
+	0x4
+	*/
+	static fn pack_unpack()
+	{
+		v = pack_char( 'a', 'b')
+		System.out.printf("0x%x\n", unpack_char(v, 1) )
+		System.out.printf("0x%x\n", unpack_char(v, 0) )
+
+		v = pack_byte( 1B, 2B, 3B, 4B)
+		System.out.printf("0x%x\n", unpack_byte(v, 3) )
+		System.out.printf("0x%x\n", unpack_byte(v, 2) )
+		System.out.printf("0x%x\n", unpack_byte(v, 1) )
+		System.out.printf("0x%x\n", unpack_byte(v, 0) )
+	
+	}
+
+
+	static fn main(args:String[])
+	{
+		intbitprint()
+		
+		bitxor_op()
+		
+		pack_unpack()
+	}
+
+}
+
+
+
+
+
+
+
+

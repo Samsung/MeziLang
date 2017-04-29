@@ -1,0 +1,232 @@
+import java.util.List
+
+
+class Pos {
+	y:int, x:int
+	
+	fn Pos(y:int, x:int){
+		this.y = y
+		this.x = x
+	}
+	
+	fn toString() := "("+y+", "+x+")"
+	
+}
+
+
+class Dijkstra {
+
+	mapsize:int 
+	loadmap:int[][]
+	adj_graph:Pos[][]
+	delta:Pos[]
+	u:int[]
+	d:int[]
+	h:int[]
+
+	//fn Dijkstra( n:int, load_input:List )
+	fn init( n:int, load_input:List )
+	{
+		delta = Pos[4] 
+		delta[0] = Pos(-1, 0), delta[1] = Pos(0, 1), 	// needs to improve(map initialization)
+		delta[2] = Pos(1, 0) , delta[3] = Pos(0, -1)
+
+		mapsize = n
+		
+		loadmap = int[mapsize][mapsize]
+		for( y = 0; y < mapsize; y++)
+		{
+			for( x = 0; x < mapsize ; x++)
+				loadmap[y][x] = int<-( List<-load_input.get(y) ).get(x)  // needs to improve
+		}
+		
+		const_adj_graph()	
+		
+		u = int[mapsize*mapsize]
+		for( i = 0 ; i < mapsize*mapsize ; i++) u[i] = 0
+		
+		d = int[mapsize*mapsize]
+		for( i = 0 ; i < mapsize*mapsize ; i++) d[i] = 0x1FFFFFFF
+		
+		h = int[mapsize*mapsize]
+		for( i = 0 ; i < mapsize*mapsize ; i++) h[i] = 0
+		
+	}
+
+	fn pos2idx(y:int, x:int) := y * mapsize + x 
+	
+	fn pos2idx(p:Pos) := p.y * mapsize + p.x 
+	
+	fn idx2y(idx:int) := idx / mapsize
+	
+	fn idx2x(idx:int) := idx % mapsize
+
+
+	fn const_adj_graph()
+	{
+		adj_graph = Pos[mapsize*mapsize][4]
+	
+		adj_graph = Pos[mapsize*mapsize][4]
+		
+		for( y = 0 ; y < mapsize ; y++)
+			for( x = 0 ; x < mapsize ; x++)
+			{
+				gidx = pos2idx(y, x)
+				
+				for( dir = 0 ; dir < 4 ; dir++)
+				{
+					ny = y + delta[dir].y
+					nx = x + delta[dir].x
+
+					// Branch Frame Checking Bug(workaroud applied)
+					adj_graph[gidx][dir] = 
+						if( ny < 0 || ny >= mapsize || nx < 0 || nx >= mapsize ) 
+							null
+						else 
+							Pos(ny, nx)
+				}
+			}
+	}
+
+
+	fn dump_adj_graph()
+	{
+		for( y = 0 ; y < mapsize ; y++)
+		{
+			for( x = 0 ; x < mapsize ; x++)
+			{
+				System.out.print("("+y+" ,"+x+")-")
+			
+				for( i = 0 ; i < 4 ; i++)
+					System.out.print(adj_graph[pos2idx(y, x)][i])
+				System.out.println()
+			}
+		}	
+	}
+
+
+	fn get_next()
+	{
+		min_d = 0x1FFFFFFF;
+		min_d_idx = -1;
+	
+		for( y = 0 ; y < mapsize ; y++)
+			for( x = 0 ; x < mapsize ; x++)
+			{
+				gidx = pos2idx(y, x)
+				if( u[gidx] != 1 )
+				{
+					if( d[gidx] < min_d )
+					{
+						min_d = d[gidx]
+						min_d_idx = gidx;
+					}
+				}
+			
+			}
+	
+		return min_d_idx;
+	}
+	
+
+	fn update(st_idx:int, end_idx:int)
+	{
+		c_idx = st_idx
+		d[c_idx] = 0
+		
+		for( ; c_idx != end_idx ; )
+		{
+			u[c_idx] = 1
+			//System.out.println("c "+ c_idx+"("+idx2y(c_idx)+", "+idx2x(c_idx)+")")
+		
+			for( i = 0 ; i< 4 ;i++)
+			{
+				neigh_pos = adj_graph[c_idx][i]
+				
+				if( neigh_pos != null )
+				{
+					neigh_idx = pos2idx(neigh_pos)
+					
+					if( u[pos2idx(neigh_pos)] != 1 )
+					{
+						dist = d[c_idx] + loadmap[neigh_pos.y][neigh_pos.x]
+						if( dist < d[neigh_idx] )
+						{ 
+							d[neigh_idx] = dist
+						}
+					}
+				}
+			}
+		
+			c_idx = get_next()
+		}
+	
+	}
+
+
+	fn dump_shortest_path(st_idx:int, end_idx:int)
+	{
+		c_idx = end_idx;
+
+		for( ; c_idx != st_idx; )
+		{	
+			System.out.print("("+idx2y(c_idx)+", "+idx2x(c_idx)+")<-")
+			h[c_idx] = 1
+		
+			maxi = 0
+			maxd = 0x1FFFFFFF
+			for( i = 0; i < 4 ; i++)
+			{
+				neigh_pos = adj_graph[c_idx][i]
+				if( neigh_pos == null ) continue
+
+				neigh_idx = pos2idx(neigh_pos)
+				
+				if( h[neigh_idx] == 1 ) continue
+				
+				if( d[neigh_idx] < maxd )
+				{
+					maxi = neigh_idx
+					maxd = d[neigh_idx] 
+				}
+			}
+			
+			c_idx = maxi
+		}	
+	
+		System.out.print("("+idx2y(c_idx)+", "+idx2x(c_idx)+")")
+
+	}
+
+}
+
+
+class ApsDijkstra {
+
+	static fn main(args:String[])
+	{
+		// 8 * 8 size map
+		// you can move only to 4 direction( east, west, south, north ) 
+		// finding minimum cost from (0,0) to (7,7)
+		input = {
+ 			//start->    
+      				{0, 1, 3, 3, 3, 2, 1, 2}.toList(),
+					{0, 3, 1, 2, 1, 3, 0, 2}.toList(),
+					{0, 1, 2, 2, 0, 1, 1, 2}.toList(),
+					{0, 2, 0, 0, 3, 2, 2, 0}.toList(),
+					{1, 3, 3, 2, 3, 0, 2, 0}.toList(),
+					{1, 3, 0, 1, 0, 1, 2, 1}.toList(),
+					{2, 3, 1, 2, 0, 0, 1, 2}.toList(),
+					{0, 2, 3, 2, 2, 2, 2, 0}.toList() // ->end 
+		}.toList()
+		
+		//d = Dijkstra(8, input)
+		d = Dijkstra()
+		d.init(8, input)
+
+		//d.dump_adj_graph()
+		d.update(0, d.pos2idx(7,7))
+		d.dump_shortest_path(0, d.pos2idx(7,7))
+	}
+
+}

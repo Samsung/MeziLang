@@ -1,0 +1,48 @@
+
+class MemoFibonachi
+{
+	memo:int[]
+
+	fn MemoFibonachi(n:int)
+	{
+		memo = int[n+1]
+		memo[0] = 0
+		memo[1] = 1
+		for( i = 2 ; i < n ; i++) 
+			memo[i] = 0
+	}
+
+	fn fibo(n:int)->int :=
+		if( n >= 2 && memo[n] == 0 ) 
+			memo[n] = fibo(n-1) + fibo(n-2)
+		else
+			memo[n]
+
+}
+
+
+class AbsFibonachi
+{
+	static fn fibo(n:int)->int :=
+		if( n < 2 ) 
+			n
+		else 
+			fibo(n-1) + fibo(n-2) 
+			
+
+	static fn main(args:String[])
+	{
+		n = 28
+	
+		System.out.println("# Fibonachi(Recursive) n = " + n)
+		// recursive fibonachi value
+		System.out.println( fibo( n ) )
+		
+		System.out.println("# Fibonachi(Memoization) n = " + n)
+		// meoization
+		mfibo = MemoFibonachi( n )
+		System.out.println( mfibo.fibo( n ) )
+	
+	}
+
+}

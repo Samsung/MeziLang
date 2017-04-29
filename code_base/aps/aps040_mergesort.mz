@@ -1,0 +1,69 @@
+
+import java.util.List
+import java.util.ArrayList
+
+class ApsMergeSort
+{
+
+	static fn merge(left:List, right:List)->List
+	{
+		result:List = ArrayList()
+		
+		for( ; left.size() > 0 || right.size() > 0 ; )
+		{
+			if( left.size() > 0 && right.size() > 0 )
+			{
+				if( int<-left.get(0) <= int<-right.get(0) )
+				{
+					result.add( left.remove(0) )
+				}
+				else 
+				{
+					result.add( right.remove(0) )
+				}
+			}
+			else if ( left.size() > 0 )
+			{
+				result.add( left.remove(0) )
+			}		
+			else if ( right.size() > 0 )
+			{
+				result.add( right.remove(0) )
+			}
+		}
+	
+		return result	
+	}
+
+	static fn merge_sort(m:List)->List
+	{
+		if( m.size() == 1 ) return m
+		
+		left:List = ArrayList()
+		right:List = ArrayList()
+		
+		middle = m.size()/2
+		
+		for( i = 0 ; i < middle ; i++)
+			left.add( m.get(i) )
+			
+		for( i = middle ; i < m.size() ; i++)
+			right.add( m.get(i) )
+			
+		left = merge_sort(left)
+		
+		right = merge_sort(right)
+		
+		return merge(left, right)
+	}
+
+	static fn main(args:String[])
+	{
+		list = { 4 1 2 6 3 5 }.toList()
+		System.out.println("before sorting:"+list)
+		sorted_list = merge_sort( list )   
+		System.out.println(" after sorting:"+sorted_list)
+	}
+}
+
+
