@@ -233,5 +233,17 @@ public class PathUtil {
     });
 
   }
+  
+  
+  public static String getJavaRtPath() {
+	  File rtFile = new File(System.getProperty("java.home") + 
+			  File.separator + "lib" + File.separator + "rt.jar");
+	  
+	  if (!rtFile.exists()) {
+		  return null;
+	  }
+	  
+	  return rtFile.getAbsolutePath();
+  }
 
 }

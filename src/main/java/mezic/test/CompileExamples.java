@@ -9,13 +9,19 @@ import mezic.util.PathUtil;
 public class CompileExamples {
   public static void main(String[] args) {
 
+	String rtPath = PathUtil.getJavaRtPath();
+	if (rtPath == null) {
+		System.out.println("It cannot find path of rt.jar");
+		return;
+	}  
+	  
     Compiler runner = new Compiler.Builder()
     		.setPrintout(System.out)
     		.setSourcebase("code_base/")
     		.setTargetbase("path/")
             .setClasspathes(new String[] {
             		"path/",
-            		"C:/Program Files/Java/jdk1.8.0_102/jre/lib/rt.jar",
+            		rtPath,
             		"target/classes/",
             		})
             .setDfltImportpkgs(new String[] {
