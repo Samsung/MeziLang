@@ -37,6 +37,8 @@ class ApsPermutation
 	// generate permutation
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS permutation")
+		
 		arr = { 1 2 3 4 5 6 }.toIntArray()	
 			
 		permutation(6, 0, arr)

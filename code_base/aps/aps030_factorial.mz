@@ -11,6 +11,8 @@ class ApsFactorial
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS factorial")
+		
 		System.out.println("factorial( 1 ): " + factorial( 1 ) )
 		System.out.println("factorial( 2 ): " + factorial( 2 ) )
 		System.out.println("factorial( 3 ): " + factorial( 3 ) )

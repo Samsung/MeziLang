@@ -57,6 +57,8 @@ class ApsQuickSort
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS Quick Sort")
+		
 		a = { 6 2 5 8 1 7 10 3 4 11 }.toIntArray()
 		
 		System.out.print("before sort") print_intarr(a, 0, 9)

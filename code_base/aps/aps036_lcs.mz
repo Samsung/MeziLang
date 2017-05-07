@@ -44,6 +44,8 @@ class AbsLcs // Longest Common Sub Sequence
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS LCS(Longest Common Sub Sequence Length)")
+		
 		/* // LCS memo
             R B K B G R B G G G
           -------------------------- 

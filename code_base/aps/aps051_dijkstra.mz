@@ -205,6 +205,8 @@ class ApsDijkstra {
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS Dijkstra")
+	
 		// 8 * 8 size map
 		// you can move only to 4 direction( east, west, south, north ) 
 		// finding minimum cost from (0,0) to (7,7)

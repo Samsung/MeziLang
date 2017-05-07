@@ -59,6 +59,8 @@ class ApsMergeSort
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS Merge Sort")
+		
 		list = { 4 1 2 6 3 5 }.toList()
 		System.out.println("before sorting:"+list)
 		sorted_list = merge_sort( list )   

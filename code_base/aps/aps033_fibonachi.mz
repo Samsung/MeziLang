@@ -21,7 +21,7 @@ class MemoFibonachi
 }
 
 
-class AbsFibonachi
+class ApsFibonachi
 {
 	static fn fibo(n:int)->int :=
 		if( n < 2 ) 
@@ -32,6 +32,8 @@ class AbsFibonachi
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS fibonachi")
+		
 		n = 28
 	
 		System.out.println("# Fibonachi(Recursive) n = " + n)

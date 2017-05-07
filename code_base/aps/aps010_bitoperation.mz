@@ -140,6 +140,7 @@ class ApsBitPrint
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS bitoperation")
 		intbitprint()
 		
 		bitxor_op()

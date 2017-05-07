@@ -1,6 +1,6 @@
 
 
-class AbsFibonachiDp{
+class ApsFibonachiDp{
 
 
 	static fn fibo_dp(n:int)->int
@@ -19,6 +19,8 @@ class AbsFibonachiDp{
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS fibonachi (dynamic programming)")
+		
 		System.out.println( fibo_dp(10) )
 	}
 

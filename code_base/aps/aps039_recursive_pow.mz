@@ -21,6 +21,8 @@ class ApsRecursivePower
 
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS Power (with Recursive)")
+		
 		System.out.println("2^10=" +  recursive_power( 2, 10 ) )
 
 	}

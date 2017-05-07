@@ -72,6 +72,8 @@ class ApsKnapsack
 {
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS knapsack")
+		
 		items = Item[4]
 			items[0] = Item(10, 5) // item 0 (value:10, weight:5)
 			items[1] = Item(40, 4) // item 1 (value:40, weight:4)

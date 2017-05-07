@@ -27,6 +27,8 @@ class ApsCombination
 	// generate combination
 	static fn main(args:String[])
 	{
+		System.out.println("\n#APS combination")
+	
 		arr = { 1 2 3 4 5 6 }.toIntArray()	
 
 		tr = int[3]
