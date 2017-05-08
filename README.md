@@ -1,13 +1,15 @@
 # The Mezi Programming Language
 
-Mezi is an open source programming language for general purpose. Mezi is an non-java JVM programming language, and compiled language.
+Mezi is an general purpose open source programming language. 
 
-Mezi is focussing on
+This programming language is an non-java JVM language. The source code written in the Mezi is compiled to JVM byte code.
+
+Mezi is interested in the followings.
 
 1. Expression oriented grammar
-2. Static analysis & type inference
-3. Type generalization of method
-4. Thread serialization & live migration (TODO)
+2. Type generalization, and type inference
+3. Identifying definition and assignment
+4. Thread serialization & live migration (Future Plan)
 
 ## Getting Started
 [Building Mezi compiler & Helloworld example](BUILD.md)
