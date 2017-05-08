@@ -7,10 +7,14 @@ import mezic.compiler.Debug;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpFloat extends OpObject {
 
   private static final long serialVersionUID = -7320983276345826191L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpFloat.class);
 
   public OpFloat(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -31,7 +35,7 @@ public class OpFloat extends OpObject {
     if (lval.getForm() == Container.FORM_FUNSTACK_VAR) {
       //// Compiled Instruction
       opinfo.mv.visitVarInsn(Opcodes.FSTORE, lval.getContextVarIdx());
-      Debug.println_info("FSTORE" + lval.getContextVarIdx());
+      LOG.info("FSTORE" + lval.getContextVarIdx());
       //// End
       lval.setAssigned(true);
     } else if (lval.getForm() == Container.FORM_OBJMEMBER_VAR) {
@@ -51,11 +55,11 @@ public class OpFloat extends OpObject {
       }
 
       if (lval.isSingleton()) {
-        Debug.println_info(
+        LOG.info(
             "PUTSTATIC " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       } else {
-        Debug.println_info(
+        LOG.info(
             "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       }
@@ -66,7 +70,7 @@ public class OpFloat extends OpObject {
       Debug.assertion(src_cont.isTypeInitialized(), "lval_owner should be type initialized");
       Debug.assertion(src_cont.getType() instanceof TMapType, "lval_owner type should be TMapType");
 
-      Debug.println_dbg("FASTORE");
+      LOG.debug("FASTORE");
       opinfo.mv.visitInsn(Opcodes.FASTORE);
     } else {
       throw new CompileException("Invalid lval form(" + lval + ")");
@@ -87,7 +91,7 @@ public class OpFloat extends OpObject {
 
     //// Compiled Instruction
     opinfo.mv.visitInsn(Opcodes.FADD);
-    Debug.println_info("FADD");
+    LOG.info("FADD");
     // added result will be on the operand stack
     //// End
 
@@ -101,7 +105,7 @@ public class OpFloat extends OpObject {
 
     //// Compiled Instruction
     opinfo.mv.visitInsn(Opcodes.FSUB);
-    Debug.println_info("FSUB");
+    LOG.info("FSUB");
     // subed result will be on the operand stack
     //// End
 
@@ -114,7 +118,7 @@ public class OpFloat extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("FMUL");
+    LOG.info("FMUL");
     opinfo.mv.visitInsn(Opcodes.FMUL);
     // subed result will be on the operand stack
     //// End
@@ -128,7 +132,7 @@ public class OpFloat extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("FDIV");
+    LOG.info("FDIV");
     opinfo.mv.visitInsn(Opcodes.FDIV);
     // subed result will be on the operand stack
     //// End
@@ -142,7 +146,7 @@ public class OpFloat extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("FREM");
+    LOG.info("FREM");
     opinfo.mv.visitInsn(Opcodes.FREM);
     // subed result will be on the operand stack
     //// End
@@ -291,10 +295,10 @@ public class OpFloat extends OpObject {
 
     //// Compiled Instruction
     float float_val = -1.0f;
-    Debug.println_info("LDC_" + float_val);
+    LOG.info("LDC_" + float_val);
     opinfo.mv.visitLdcInsn(float_val);
 
-    Debug.println_info("FMUL");
+    LOG.info("FMUL");
     opinfo.mv.visitInsn(Opcodes.FMUL);
     // subed result will be on the operand stack
     //// End
@@ -306,7 +310,7 @@ public class OpFloat extends OpObject {
   public Container multiply_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("FMUL");
+    LOG.info("FMUL");
     opinfo.mv.visitInsn(Opcodes.FMUL);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -319,7 +323,7 @@ public class OpFloat extends OpObject {
   public Container division_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("FDIV");
+    LOG.info("FDIV");
     opinfo.mv.visitInsn(Opcodes.FDIV);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -332,7 +336,7 @@ public class OpFloat extends OpObject {
   public Container rest_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("FREM");
+    LOG.info("FREM");
     opinfo.mv.visitInsn(Opcodes.FREM);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -346,7 +350,7 @@ public class OpFloat extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("FADD");
+    LOG.info("FADD");
     opinfo.mv.visitInsn(Opcodes.FADD);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -358,7 +362,7 @@ public class OpFloat extends OpObject {
   public Container minus_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("FSUB");
+    LOG.info("FSUB");
     opinfo.mv.visitInsn(Opcodes.FSUB);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -400,26 +404,26 @@ public class OpFloat extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("FCONST_1");
+          LOG.info("FCONST_1");
           opinfo.mv.visitInsn(Opcodes.FCONST_1);
-          Debug.println_info("FADD");
+          LOG.info("FADD");
           opinfo.mv.visitInsn(Opcodes.FADD);
-          Debug.println_info("DUP");
+          LOG.info("DUP");
           opinfo.mv.visitInsn(Opcodes.DUP);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("FCONST_1");
+          LOG.info("FCONST_1");
           opinfo.mv.visitInsn(Opcodes.FCONST_1);
-          Debug.println_info("FADD");
+          LOG.info("FADD");
           opinfo.mv.visitInsn(Opcodes.FADD);
-          Debug.println_info("DUP_X1");
+          LOG.info("DUP_X1");
           opinfo.mv.visitInsn(Opcodes.DUP_X1);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -429,16 +433,16 @@ public class OpFloat extends OpObject {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
 
         //// Compiled Instruction
-        Debug.println_info("FCONST_1");
+        LOG.info("FCONST_1");
         opinfo.mv.visitInsn(Opcodes.FCONST_1);
 
-        Debug.println_info("FADD");
+        LOG.info("FADD");
         opinfo.mv.visitInsn(Opcodes.FADD);
 
-        Debug.println_info("FSTORE_" + lval.getContextVarIdx());
+        LOG.info("FSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.FSTORE, lval.getContextVarIdx());
 
-        Debug.println_info("FLOAD_" + lval.getContextVarIdx());
+        LOG.info("FLOAD_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.FLOAD, lval.getContextVarIdx());
         //// End
       }
@@ -446,19 +450,19 @@ public class OpFloat extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2"); // Map ref & Index..
+      LOG.debug("DUP2"); // Map ref & Index..
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("FALOAD");
+      LOG.debug("FALOAD");
       opinfo.mv.visitInsn(Opcodes.FALOAD);
 
-      Debug.println_info("FCONST_1");
+      LOG.info("FCONST_1");
       opinfo.mv.visitInsn(Opcodes.FCONST_1);
-      Debug.println_info("FADD");
+      LOG.info("FADD");
       opinfo.mv.visitInsn(Opcodes.FADD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_dbg("FASTORE");
+      LOG.debug("FASTORE");
       opinfo.mv.visitInsn(Opcodes.FASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -498,30 +502,30 @@ public class OpFloat extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("FCONST_1");
+          LOG.info("FCONST_1");
           opinfo.mv.visitInsn(Opcodes.FCONST_1);
 
-          Debug.println_info("FSUB");
+          LOG.info("FSUB");
           opinfo.mv.visitInsn(Opcodes.FSUB);
 
-          Debug.println_info("DUP");
+          LOG.info("DUP");
           opinfo.mv.visitInsn(Opcodes.DUP);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("FCONST_1");
+          LOG.info("FCONST_1");
           opinfo.mv.visitInsn(Opcodes.FCONST_1);
 
-          Debug.println_info("FSUB");
+          LOG.info("FSUB");
           opinfo.mv.visitInsn(Opcodes.FSUB);
 
-          Debug.println_info("DUP_X1");
+          LOG.info("DUP_X1");
           opinfo.mv.visitInsn(Opcodes.DUP_X1);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -531,16 +535,16 @@ public class OpFloat extends OpObject {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
 
         //// Compiled Instruction
-        Debug.println_info("FCONST_1");
+        LOG.info("FCONST_1");
         opinfo.mv.visitInsn(Opcodes.FCONST_1);
 
-        Debug.println_info("FSUB");
+        LOG.info("FSUB");
         opinfo.mv.visitInsn(Opcodes.FSUB);
 
-        Debug.println_info("FSTORE_" + lval.getContextVarIdx());
+        LOG.info("FSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.FSTORE, lval.getContextVarIdx());
 
-        Debug.println_info("FLOAD_" + lval.getContextVarIdx());
+        LOG.info("FLOAD_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.FLOAD, lval.getContextVarIdx());
         //// End
       }
@@ -548,19 +552,19 @@ public class OpFloat extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("FALOAD");
+      LOG.debug("FALOAD");
       opinfo.mv.visitInsn(Opcodes.FALOAD);
 
-      Debug.println_info("FCONST_1");
+      LOG.info("FCONST_1");
       opinfo.mv.visitInsn(Opcodes.FCONST_1);
-      Debug.println_info("FSUB");
+      LOG.info("FSUB");
       opinfo.mv.visitInsn(Opcodes.FSUB);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_dbg("FASTORE");
+      LOG.debug("FASTORE");
       opinfo.mv.visitInsn(Opcodes.FASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -595,22 +599,22 @@ public class OpFloat extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("FCONST_1");
+          LOG.info("FCONST_1");
           opinfo.mv.visitInsn(Opcodes.FCONST_1);
-          Debug.println_info("FADD");
+          LOG.info("FADD");
           opinfo.mv.visitInsn(Opcodes.FADD);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("FCONST_1");
+          LOG.info("FCONST_1");
           opinfo.mv.visitInsn(Opcodes.FCONST_1);
-          Debug.println_info("FADD");
+          LOG.info("FADD");
           opinfo.mv.visitInsn(Opcodes.FADD);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -618,16 +622,16 @@ public class OpFloat extends OpObject {
       } else {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
         //// Compiled Instruction
-        Debug.println_info("DUP");
+        LOG.info("DUP");
         opinfo.mv.visitInsn(Opcodes.DUP);
 
-        Debug.println_info("FCONST_1");
+        LOG.info("FCONST_1");
         opinfo.mv.visitInsn(Opcodes.FCONST_1);
 
-        Debug.println_info("FADD");
+        LOG.info("FADD");
         opinfo.mv.visitInsn(Opcodes.FADD);
 
-        Debug.println_info("FSTORE_" + lval.getContextVarIdx());
+        LOG.info("FSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.FSTORE, lval.getContextVarIdx());
         //// End
       }
@@ -635,18 +639,18 @@ public class OpFloat extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("FALOAD");
+      LOG.debug("FALOAD");
       opinfo.mv.visitInsn(Opcodes.FALOAD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_info("FCONST_1");
+      LOG.info("FCONST_1");
       opinfo.mv.visitInsn(Opcodes.FCONST_1);
-      Debug.println_info("FADD");
+      LOG.info("FADD");
       opinfo.mv.visitInsn(Opcodes.FADD);
-      Debug.println_dbg("FASTORE");
+      LOG.debug("FASTORE");
       opinfo.mv.visitInsn(Opcodes.FASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -682,22 +686,22 @@ public class OpFloat extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("FCONST_1");
+          LOG.info("FCONST_1");
           opinfo.mv.visitInsn(Opcodes.FCONST_1);
-          Debug.println_info("FSUB");
+          LOG.info("FSUB");
           opinfo.mv.visitInsn(Opcodes.FSUB);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("FCONST_1");
+          LOG.info("FCONST_1");
           opinfo.mv.visitInsn(Opcodes.FCONST_1);
-          Debug.println_info("FSUB");
+          LOG.info("FSUB");
           opinfo.mv.visitInsn(Opcodes.FSUB);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -705,16 +709,16 @@ public class OpFloat extends OpObject {
       } else {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
         //// Compiled Instruction
-        Debug.println_info("DUP");
+        LOG.info("DUP");
         opinfo.mv.visitInsn(Opcodes.DUP);
 
-        Debug.println_info("FCONST_1");
+        LOG.info("FCONST_1");
         opinfo.mv.visitInsn(Opcodes.FCONST_1);
 
-        Debug.println_info("FSUB");
+        LOG.info("FSUB");
         opinfo.mv.visitInsn(Opcodes.FSUB);
 
-        Debug.println_info("FSTORE_" + lval.getContextVarIdx());
+        LOG.info("FSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.FSTORE, lval.getContextVarIdx());
         //// End
       }
@@ -722,18 +726,18 @@ public class OpFloat extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("FALOAD");
+      LOG.debug("FALOAD");
       opinfo.mv.visitInsn(Opcodes.FALOAD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_info("FCONST_1");
+      LOG.info("FCONST_1");
       opinfo.mv.visitInsn(Opcodes.FCONST_1);
-      Debug.println_info("FSUB");
+      LOG.info("FSUB");
       opinfo.mv.visitInsn(Opcodes.FSUB);
-      Debug.println_dbg("FASTORE");
+      LOG.debug("FASTORE");
       opinfo.mv.visitInsn(Opcodes.FASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -759,7 +763,7 @@ public class OpFloat extends OpObject {
     } else if (float_val == 2.0f) {
       opinfo.mv.visitInsn(Opcodes.FCONST_2);
     } else {
-      Debug.println_info("LDC_Float " + float_val);
+      LOG.info("LDC_Float " + float_val);
       opinfo.mv.visitLdcInsn(float_val);
     }
 
@@ -768,35 +772,35 @@ public class OpFloat extends OpObject {
   @Override
   public void store(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.FSTORE, index);
-    Debug.println_info("FSTORE_" + index);
+    LOG.info("FSTORE_" + index);
   }
 
   @Override
   public void store_map_element(OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.FASTORE);
-    Debug.println_info("FASTORE");
+    LOG.info("FASTORE");
   }
 
   @Override
   public void load_funcstack_variable(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.FLOAD, index);
-    Debug.println_info("FLOAD_" + index);
+    LOG.info("FLOAD_" + index);
   }
 
   @Override
   public void return_variable(Container lval, OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.FRETURN);
-    Debug.println_info("FRETURN");
+    LOG.info("FRETURN");
   }
 
   @Override
   public void return_dummy_variable(OpInfo opinfo) throws CompileException {
 
     opinfo.mv.visitInsn(Opcodes.FCONST_1);
-    Debug.println_info("FCONST_1 for Float");
+    LOG.info("FCONST_1 for Float");
 
     opinfo.mv.visitInsn(Opcodes.FRETURN);
-    Debug.println_info("FRETURN" + " for Float");
+    LOG.info("FRETURN" + " for Float");
   }
 
   @Override
@@ -833,13 +837,13 @@ public class OpFloat extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/Float") || tgttype.isName("java/lang/Object")) {
-      Debug.println_info("CHANGE F->java/lang/Float");
+      LOG.info("CHANGE F->java/lang/Float");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/Float");
       return type;
     } else if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("CHANGE I->java/lang/String");
+      LOG.info("CHANGE I->java/lang/String");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Float", "toString", "(F)Ljava/lang/String;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/String");
@@ -854,7 +858,7 @@ public class OpFloat extends OpObject {
     opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/Float");
     opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F", false);
 
-    Debug.println_info("CAST to F");
+    LOG.info("CAST to F");
   }
 
 }

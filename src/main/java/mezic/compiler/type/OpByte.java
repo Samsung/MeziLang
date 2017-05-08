@@ -6,10 +6,14 @@ import mezic.compiler.Container;
 import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpByte extends OpShort {
 
   private static final long serialVersionUID = 609500681055432094L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpByte.class);
 
   public OpByte(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -30,7 +34,7 @@ public class OpByte extends OpShort {
     if (lval.getForm() == Container.FORM_FUNSTACK_VAR) {
       //// Compiled Instruction
       opinfo.mv.visitVarInsn(Opcodes.ISTORE, lval.getContextVarIdx());
-      Debug.println_info("ISTORE" + lval.getContextVarIdx());
+      LOG.info("ISTORE" + lval.getContextVarIdx());
       //// End
       lval.setAssigned(true);
     } else if (lval.getForm() == Container.FORM_OBJMEMBER_VAR) {
@@ -50,11 +54,11 @@ public class OpByte extends OpShort {
       }
 
       if (lval.isSingleton()) {
-        Debug.println_info(
+        LOG.info(
             "PUTSTATIC " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       } else {
-        Debug.println_info(
+        LOG.info(
             "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       }
@@ -65,7 +69,7 @@ public class OpByte extends OpShort {
       Debug.assertion(src_cont.isTypeInitialized(), "lval_owner should be type initialized");
       Debug.assertion(src_cont.getType() instanceof TMapType, "lval_owner type should be TMapType");
 
-      Debug.println_dbg("BASTORE");
+      LOG.debug("BASTORE");
       opinfo.mv.visitInsn(Opcodes.BASTORE);
     } else {
       throw new CompileException("Invalid lval form(" + lval + ")");
@@ -110,10 +114,10 @@ public class OpByte extends OpShort {
       default:
         // do nothing
       }
-      Debug.println_info("ICONST_" + int_val);
+      LOG.info("ICONST_" + int_val);
     } else if ((int_val >= 6 && int_val <= 127) || (int_val >= -128 && int_val <= -2)) {
       opinfo.mv.visitIntInsn(Opcodes.BIPUSH, int_val);
-      Debug.println_info("BIPUSH_" + int_val);
+      LOG.info("BIPUSH_" + int_val);
     } else {
       throw new CompileException("Out of Integer boundary(" + int_val + ")");
     }
@@ -135,13 +139,13 @@ public class OpByte extends OpShort {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/Byte") || tgttype.isName("java/lang/Object")) {
-      Debug.println_info("CHANGE B->java/lang/Byte");
+      LOG.info("CHANGE B->java/lang/Byte");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Byte", "valueOf", "(C)Ljava/lang/Byte;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/Byte");
       return type;
     } else if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("CHANGE B->java/lang/String");
+      LOG.info("CHANGE B->java/lang/String");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Byte", "toString", "(B)Ljava/lang/String;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/String");
@@ -156,7 +160,7 @@ public class OpByte extends OpShort {
     opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/Byte");
     opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B", false);
 
-    Debug.println_info("CAST to C");
+    LOG.info("CAST to C");
   }
 
 }

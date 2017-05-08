@@ -1,5 +1,8 @@
 package mezic.compiler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mezic.compiler.type.AbsType;
 import mezic.compiler.type.OpLvalue;
 import mezic.compiler.type.TContext;
@@ -8,6 +11,8 @@ import mezic.parser.Token;
 public class Container extends Reduction {
 
   private static final long serialVersionUID = -5701252282403450023L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(Container.class);
 
   public final static int FORM_FUNSTACK_VAR = 1;
   public final static int FORM_OBJMEMBER_VAR = 2;
@@ -287,7 +292,7 @@ public class Container extends Reduction {
 
     int var_idx = getContext().allocChildVarIdx(getType().op().getCategory());
 
-    Debug.println_dbg("bindVarIdx: var_idx=" + var_idx + ", cont: " + this);
+    LOG.debug("bindVarIdx: var_idx=" + var_idx + ", cont: " + this);
 
     setContextVarIdx(var_idx);
 

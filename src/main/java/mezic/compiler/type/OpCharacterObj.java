@@ -6,10 +6,14 @@ import mezic.compiler.Container;
 import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpCharacterObj extends OpObject {
 
   private static final long serialVersionUID = -2997908685943678833L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpCharacterObj.class);
 
   public OpCharacterObj(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -46,7 +50,7 @@ public class OpCharacterObj extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName(TPrimitiveClass.NAME_CHAR)) {
-      Debug.println_info("CHANGE java/lang/Character -> C");
+      LOG.info("CHANGE java/lang/Character -> C");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull(TPrimitiveClass.NAME_CHAR);

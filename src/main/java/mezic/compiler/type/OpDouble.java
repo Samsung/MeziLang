@@ -7,10 +7,14 @@ import mezic.compiler.Debug;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpDouble extends OpObject {
 
   private static final long serialVersionUID = 9141961605464582440L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpDouble.class);
 
   public OpDouble(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -36,7 +40,7 @@ public class OpDouble extends OpObject {
     if (lval.getForm() == Container.FORM_FUNSTACK_VAR) {
       //// Compiled Instruction
       opinfo.mv.visitVarInsn(Opcodes.DSTORE, lval.getContextVarIdx());
-      Debug.println_info("DSTORE" + lval.getContextVarIdx());
+      LOG.info("DSTORE" + lval.getContextVarIdx());
       //// End
       lval.setAssigned(true);
     } else if (lval.getForm() == Container.FORM_OBJMEMBER_VAR) {
@@ -56,11 +60,11 @@ public class OpDouble extends OpObject {
       }
 
       if (lval.isSingleton()) {
-        Debug.println_info(
+        LOG.info(
             "PUTSTATIC " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       } else {
-        Debug.println_info(
+        LOG.info(
             "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       }
@@ -71,7 +75,7 @@ public class OpDouble extends OpObject {
       Debug.assertion(src_cont.isTypeInitialized(), "lval_owner should be type initialized");
       Debug.assertion(src_cont.getType() instanceof TMapType, "lval_owner type should be TMapType");
 
-      Debug.println_dbg("DASTORE");
+      LOG.debug("DASTORE");
       opinfo.mv.visitInsn(Opcodes.DASTORE);
     } else {
       throw new CompileException("Invalid lval form(" + lval + ")");
@@ -92,7 +96,7 @@ public class OpDouble extends OpObject {
 
     //// Compiled Instruction
     opinfo.mv.visitInsn(Opcodes.DADD);
-    Debug.println_info("DADD");
+    LOG.info("DADD");
     // added result will be on the operand stack
     //// End
 
@@ -106,7 +110,7 @@ public class OpDouble extends OpObject {
 
     //// Compiled Instruction
     opinfo.mv.visitInsn(Opcodes.DSUB);
-    Debug.println_info("DSUB");
+    LOG.info("DSUB");
     // subed result will be on the operand stack
     //// End
 
@@ -119,7 +123,7 @@ public class OpDouble extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("DMUL");
+    LOG.info("DMUL");
     opinfo.mv.visitInsn(Opcodes.DMUL);
     // subed result will be on the operand stack
     //// End
@@ -133,7 +137,7 @@ public class OpDouble extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("DDIV");
+    LOG.info("DDIV");
     opinfo.mv.visitInsn(Opcodes.DDIV);
     // subed result will be on the operand stack
     //// End
@@ -147,7 +151,7 @@ public class OpDouble extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("DREM");
+    LOG.info("DREM");
     opinfo.mv.visitInsn(Opcodes.DREM);
     // subed result will be on the operand stack
     //// End
@@ -296,10 +300,10 @@ public class OpDouble extends OpObject {
 
     //// Compiled Instruction
     double double_val = -1.0f;
-    Debug.println_info("LDC_" + double_val);
+    LOG.info("LDC_" + double_val);
     opinfo.mv.visitLdcInsn(double_val);
 
-    Debug.println_info("DMUL");
+    LOG.info("DMUL");
     opinfo.mv.visitInsn(Opcodes.DMUL);
     // subed result will be on the operand stack
     //// End
@@ -311,7 +315,7 @@ public class OpDouble extends OpObject {
   public Container multiply_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("DMUL");
+    LOG.info("DMUL");
     opinfo.mv.visitInsn(Opcodes.DMUL);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -324,7 +328,7 @@ public class OpDouble extends OpObject {
   public Container division_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("DDIV");
+    LOG.info("DDIV");
     opinfo.mv.visitInsn(Opcodes.DDIV);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -337,7 +341,7 @@ public class OpDouble extends OpObject {
   public Container rest_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("DREM");
+    LOG.info("DREM");
     opinfo.mv.visitInsn(Opcodes.DREM);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -351,7 +355,7 @@ public class OpDouble extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("DADD");
+    LOG.info("DADD");
     opinfo.mv.visitInsn(Opcodes.DADD);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -363,7 +367,7 @@ public class OpDouble extends OpObject {
   public Container minus_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("DSUB");
+    LOG.info("DSUB");
     opinfo.mv.visitInsn(Opcodes.DSUB);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -405,26 +409,26 @@ public class OpDouble extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("DCONST_1");
+          LOG.info("DCONST_1");
           opinfo.mv.visitInsn(Opcodes.DCONST_1);
-          Debug.println_info("DADD");
+          LOG.info("DADD");
           opinfo.mv.visitInsn(Opcodes.DADD);
-          Debug.println_info("DUP2");
+          LOG.info("DUP2");
           opinfo.mv.visitInsn(Opcodes.DUP2);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("DCONST_1");
+          LOG.info("DCONST_1");
           opinfo.mv.visitInsn(Opcodes.DCONST_1);
-          Debug.println_info("DADD");
+          LOG.info("DADD");
           opinfo.mv.visitInsn(Opcodes.DADD);
-          Debug.println_info("DUP2_X1");
+          LOG.info("DUP2_X1");
           opinfo.mv.visitInsn(Opcodes.DUP2_X1);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -434,16 +438,16 @@ public class OpDouble extends OpObject {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
 
         //// Compiled Instruction
-        Debug.println_info("DCONST_1");
+        LOG.info("DCONST_1");
         opinfo.mv.visitInsn(Opcodes.DCONST_1);
 
-        Debug.println_info("DADD");
+        LOG.info("DADD");
         opinfo.mv.visitInsn(Opcodes.DADD);
 
-        Debug.println_info("DSTORE_" + lval.getContextVarIdx());
+        LOG.info("DSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.DSTORE, lval.getContextVarIdx());
 
-        Debug.println_info("DLOAD_" + lval.getContextVarIdx());
+        LOG.info("DLOAD_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.DLOAD, lval.getContextVarIdx());
         //// End
       }
@@ -451,19 +455,19 @@ public class OpDouble extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2"); // Map ref & Index..
+      LOG.debug("DUP2"); // Map ref & Index..
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("DALOAD");
+      LOG.debug("DALOAD");
       opinfo.mv.visitInsn(Opcodes.DALOAD);
 
-      Debug.println_info("DCONST_1");
+      LOG.info("DCONST_1");
       opinfo.mv.visitInsn(Opcodes.DCONST_1);
-      Debug.println_info("DADD");
+      LOG.info("DADD");
       opinfo.mv.visitInsn(Opcodes.DADD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_dbg("DASTORE");
+      LOG.debug("DASTORE");
       opinfo.mv.visitInsn(Opcodes.DASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -503,30 +507,30 @@ public class OpDouble extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("DCONST_1");
+          LOG.info("DCONST_1");
           opinfo.mv.visitInsn(Opcodes.DCONST_1);
 
-          Debug.println_info("DSUB");
+          LOG.info("DSUB");
           opinfo.mv.visitInsn(Opcodes.DSUB);
 
-          Debug.println_info("DUP2");
+          LOG.info("DUP2");
           opinfo.mv.visitInsn(Opcodes.DUP2);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("DCONST_1");
+          LOG.info("DCONST_1");
           opinfo.mv.visitInsn(Opcodes.DCONST_1);
 
-          Debug.println_info("DSUB");
+          LOG.info("DSUB");
           opinfo.mv.visitInsn(Opcodes.DSUB);
 
-          Debug.println_info("DUP2_X1");
+          LOG.info("DUP2_X1");
           opinfo.mv.visitInsn(Opcodes.DUP2_X1);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -536,16 +540,16 @@ public class OpDouble extends OpObject {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
 
         //// Compiled Instruction
-        Debug.println_info("DCONST_1");
+        LOG.info("DCONST_1");
         opinfo.mv.visitInsn(Opcodes.DCONST_1);
 
-        Debug.println_info("DSUB");
+        LOG.info("DSUB");
         opinfo.mv.visitInsn(Opcodes.DSUB);
 
-        Debug.println_info("DSTORE_" + lval.getContextVarIdx());
+        LOG.info("DSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.DSTORE, lval.getContextVarIdx());
 
-        Debug.println_info("DLOAD_" + lval.getContextVarIdx());
+        LOG.info("DLOAD_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.DLOAD, lval.getContextVarIdx());
         //// End
       }
@@ -553,19 +557,19 @@ public class OpDouble extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("DALOAD");
+      LOG.debug("DALOAD");
       opinfo.mv.visitInsn(Opcodes.DALOAD);
 
-      Debug.println_info("DCONST_1");
+      LOG.info("DCONST_1");
       opinfo.mv.visitInsn(Opcodes.DCONST_1);
-      Debug.println_info("DSUB");
+      LOG.info("DSUB");
       opinfo.mv.visitInsn(Opcodes.DSUB);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_dbg("DASTORE");
+      LOG.debug("DASTORE");
       opinfo.mv.visitInsn(Opcodes.DASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -600,22 +604,22 @@ public class OpDouble extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("DCONST_1");
+          LOG.info("DCONST_1");
           opinfo.mv.visitInsn(Opcodes.DCONST_1);
-          Debug.println_info("DADD");
+          LOG.info("DADD");
           opinfo.mv.visitInsn(Opcodes.DADD);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("DCONST_1");
+          LOG.info("DCONST_1");
           opinfo.mv.visitInsn(Opcodes.DCONST_1);
-          Debug.println_info("DADD");
+          LOG.info("DADD");
           opinfo.mv.visitInsn(Opcodes.DADD);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -623,16 +627,16 @@ public class OpDouble extends OpObject {
       } else {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
         //// Compiled Instruction
-        Debug.println_info("DUP2");
+        LOG.info("DUP2");
         opinfo.mv.visitInsn(Opcodes.DUP2);
 
-        Debug.println_info("DCONST_1");
+        LOG.info("DCONST_1");
         opinfo.mv.visitInsn(Opcodes.DCONST_1);
 
-        Debug.println_info("DADD");
+        LOG.info("DADD");
         opinfo.mv.visitInsn(Opcodes.DADD);
 
-        Debug.println_info("DSTORE_" + lval.getContextVarIdx());
+        LOG.info("DSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.DSTORE, lval.getContextVarIdx());
         //// End
       }
@@ -640,18 +644,18 @@ public class OpDouble extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("DALOAD");
+      LOG.debug("DALOAD");
       opinfo.mv.visitInsn(Opcodes.DALOAD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_info("DCONST_1");
+      LOG.info("DCONST_1");
       opinfo.mv.visitInsn(Opcodes.DCONST_1);
-      Debug.println_info("DADD");
+      LOG.info("DADD");
       opinfo.mv.visitInsn(Opcodes.DADD);
-      Debug.println_dbg("DASTORE");
+      LOG.debug("DASTORE");
       opinfo.mv.visitInsn(Opcodes.DASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -687,22 +691,22 @@ public class OpDouble extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("DCONST_1");
+          LOG.info("DCONST_1");
           opinfo.mv.visitInsn(Opcodes.DCONST_1);
-          Debug.println_info("DSUB");
+          LOG.info("DSUB");
           opinfo.mv.visitInsn(Opcodes.DSUB);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("DCONST_1");
+          LOG.info("DCONST_1");
           opinfo.mv.visitInsn(Opcodes.DCONST_1);
-          Debug.println_info("DSUB");
+          LOG.info("DSUB");
           opinfo.mv.visitInsn(Opcodes.DSUB);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -710,16 +714,16 @@ public class OpDouble extends OpObject {
       } else {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
         //// Compiled Instruction
-        Debug.println_info("DUP2");
+        LOG.info("DUP2");
         opinfo.mv.visitInsn(Opcodes.DUP2);
 
-        Debug.println_info("DCONST_1");
+        LOG.info("DCONST_1");
         opinfo.mv.visitInsn(Opcodes.DCONST_1);
 
-        Debug.println_info("DSUB");
+        LOG.info("DSUB");
         opinfo.mv.visitInsn(Opcodes.DSUB);
 
-        Debug.println_info("DSTORE_" + lval.getContextVarIdx());
+        LOG.info("DSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.DSTORE, lval.getContextVarIdx());
         //// End
       }
@@ -727,18 +731,18 @@ public class OpDouble extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("DALOAD");
+      LOG.debug("DALOAD");
       opinfo.mv.visitInsn(Opcodes.DALOAD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_info("DCONST_1");
+      LOG.info("DCONST_1");
       opinfo.mv.visitInsn(Opcodes.DCONST_1);
-      Debug.println_info("DSUB");
+      LOG.info("DSUB");
       opinfo.mv.visitInsn(Opcodes.DSUB);
-      Debug.println_dbg("DASTORE");
+      LOG.debug("DASTORE");
       opinfo.mv.visitInsn(Opcodes.DASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -762,7 +766,7 @@ public class OpDouble extends OpObject {
     } else if (double_val == 1.0f) {
       opinfo.mv.visitInsn(Opcodes.DCONST_1);
     } else {
-      Debug.println_info("LDC_Double " + double_val);
+      LOG.info("LDC_Double " + double_val);
       opinfo.mv.visitLdcInsn(double_val);
     }
 
@@ -771,35 +775,35 @@ public class OpDouble extends OpObject {
   @Override
   public void store(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.DSTORE, index);
-    Debug.println_info("DSTORE_" + index);
+    LOG.info("DSTORE_" + index);
   }
 
   @Override
   public void store_map_element(OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.DASTORE);
-    Debug.println_info("DASTORE");
+    LOG.info("DASTORE");
   }
 
   @Override
   public void load_funcstack_variable(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.DLOAD, index);
-    Debug.println_info("DLOAD_" + index);
+    LOG.info("DLOAD_" + index);
   }
 
   @Override
   public void return_variable(Container lval, OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.DRETURN);
-    Debug.println_info("DRETURN");
+    LOG.info("DRETURN");
   }
 
   @Override
   public void return_dummy_variable(OpInfo opinfo) throws CompileException {
 
     opinfo.mv.visitInsn(Opcodes.DCONST_1);
-    Debug.println_info("DCONST_1 for Double");
+    LOG.info("DCONST_1 for Double");
 
     opinfo.mv.visitInsn(Opcodes.DRETURN);
-    Debug.println_info("DRETURN" + " for Double");
+    LOG.info("DRETURN" + " for Double");
   }
 
   @Override
@@ -836,13 +840,13 @@ public class OpDouble extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/Double") || tgttype.isName("java/lang/Object")) {
-      Debug.println_info("CHANGE D->java/lang/Double");
+      LOG.info("CHANGE D->java/lang/Double");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/Double");
       return type;
     } else if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("CHANGE D->java/lang/String");
+      LOG.info("CHANGE D->java/lang/String");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Double", "toString", "(D)Ljava/lang/String;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/String");
@@ -857,7 +861,7 @@ public class OpDouble extends OpObject {
     opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/Double");
     opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", false);
 
-    Debug.println_info("CAST to D");
+    LOG.info("CAST to D");
   }
 
 }

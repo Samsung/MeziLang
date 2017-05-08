@@ -546,7 +546,7 @@ public class ASTpreprocessVisitor extends ASTTraverseVisitor {
 
       node.rotated();
 
-      // Debug.print_dbg("Node is rotated");
+      // LOG.debug("Node is rotated");
       // parent.dump_tree("", 0);
       return true;
     } else {
@@ -581,7 +581,7 @@ public class ASTpreprocessVisitor extends ASTTraverseVisitor {
     list.add(current);
 
     for (;;) {
-      // Debug.print_dbg("Rotating: "+current);
+      // LOG.debug("Rotating: "+current);
 
       if (current.jjtGetNumChildren() != 2) {
         break;
@@ -604,7 +604,7 @@ public class ASTpreprocessVisitor extends ASTTraverseVisitor {
     }
 
     if (list.size() < 2) {
-      // Debug.print_dbg("Rotating: Size is under 2");
+      // LOG.debug("Rotating: Size is under 2");
       return node;
     }
 

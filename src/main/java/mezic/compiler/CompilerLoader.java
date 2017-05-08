@@ -56,10 +56,14 @@ import mezic.util.Util;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CompilerLoader extends ClassLoader implements java.io.Serializable {
 
   private static final long serialVersionUID = -6955413858511262492L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(CompilerLoader.class);
 
   public final static String TU_FILENAME_EXTENSION = ".mz";
   public final static String JAR_FILENAME_EXTENSION = ".jar";
@@ -195,7 +199,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
     try {
       InputStream tu_stream = getCodeStream(tu_name);
 
-      Debug.println_dbg("parsing(" + tu_name + ")"); // example : unit_test.Test
+      LOG.debug("parsing(" + tu_name + ")"); // example : unit_test.Test
       Parser parser = new Parser(tu_stream);
       translation_unit = parser.TranslationUnit();
       // translation_unit.dump(".");
@@ -225,7 +229,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
       }
     }
 
-    Debug.println_dbg("Registering TU(" + tu_name + ") Pkg(" + pkg_name + ")");
+    LOG.debug("Registering TU(" + tu_name + ") Pkg(" + pkg_name + ")");
 
     TContextPkg pkg_ctx = getContextPackage(pkg_name);
 
@@ -315,7 +319,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
 
   static void printLongerTrace(Throwable t) {
     for (StackTraceElement e : t.getStackTrace()) {
-      Debug.println_dbg(e);
+      LOG.debug(e.toString());
     }
   }
 
@@ -340,7 +344,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
         String pkg_path = pkg_name.replace('.', DIR_DELIMETER_CHAR);
         pkg_path = class_pathes[i] + pkg_path;
 
-        Debug.println_dbg(
+        LOG.debug(
             "Finding FileSystemPackage(" + pkg_path + ") from path(" + cp_base_file.getAbsolutePath() + ")");
         pkg_file = new File(pkg_path);
 
@@ -354,7 +358,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
       } else if (cp_base_file.getName().endsWith(JAR_FILENAME_EXTENSION)) {
         final String pkg_path = pkg_name.replace('.', DIR_DELIMETER_CHAR);
 
-        Debug.println_dbg(
+        LOG.debug(
             "Finding FileSystemPackage(" + pkg_path + ") from jar(" + cp_base_file.getAbsolutePath() + ")");
 
         JarFileCache jarcache = this.jarcache_hash.get(class_pathes[i]);
@@ -604,7 +608,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
 
       if (cp_base_file.isDirectory()) {
         class_path = class_pathes[i] + full_class_name + CLASS_FILENAME_EXTENSION;
-        Debug.println_dbg("Finding Resolved Class File(" + class_path + ")");
+        LOG.debug("Finding Resolved Class File(" + class_path + ")");
 
         class_file = new File(class_path);
 
@@ -622,7 +626,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
 
           cn = new ClassNode();
           cr.accept(cn, ClassReader.SKIP_DEBUG);
-          // Debug.println_dbg("ClassNode("+cn.name+")");
+          // LOG.debug("ClassNode("+cn.name+")");
 
           this.classnode_hash.put(full_class_name, cn);
 
@@ -630,7 +634,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
         }
       } else if (cp_base_file.getName().endsWith(JAR_FILENAME_EXTENSION)) {
         class_path = full_class_name + CLASS_FILENAME_EXTENSION;
-        Debug.println_dbg(
+        LOG.debug(
             "Finding Resolved Class File(" + class_path + ") from jar(" + cp_base_file.getAbsolutePath() + ")");
 
         try {
@@ -643,7 +647,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
             cr = new ClassReader(class_is);
             cn = new ClassNode();
             cr.accept(cn, ClassReader.SKIP_DEBUG);
-            // Debug.println_dbg("ClassNode("+cn.name+")");
+            // LOG.debug("ClassNode("+cn.name+")");
             this.classnode_hash.put(full_class_name, cn);
 
             return cn;
@@ -691,7 +695,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
 
   public AbsType findLocalFunction(AbsClassType class_type, String name, AbsTypeList argtype_list)
       throws CompileException {
-    Debug.println_dbg("findLocalFunction: " + name + "(" + argtype_list + ") in " + class_type);
+    LOG.debug("findLocalFunction: " + name + "(" + argtype_list + ") in " + class_type);
 
     AbsType func_type = null;
     func_type = (AbsType) ((AbsClassType) class_type).getLocalFunction(name, argtype_list);
@@ -739,7 +743,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
 
     String class_file_name = target_base + class_name + CLASS_FILENAME_EXTENSION;
 
-    Debug.println_dbg("writing (" + class_name + ") on (" + class_file_name + ")");
+    LOG.debug("writing (" + class_name + ") on (" + class_file_name + ")");
 
     FileOutputStream fos = new FileOutputStream(class_file_name);
     fos.write(code);
@@ -750,7 +754,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
   public void writeNodeFile(LangUnitNode node, String node_name) throws CompileException {
     String node_file_name = target_base + node_name + NODE_FILENAME_EXTENSION;
 
-    Debug.println_dbg("writing node(" + node_name + ") on (" + node_file_name + ")");
+    LOG.debug("writing node(" + node_name + ") on (" + node_file_name + ")");
     FileOutputStream fos = null;
     try {
       fos = new FileOutputStream(node_file_name);
@@ -770,7 +774,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
   public LangUnitNode readNodeFile(String node_name) throws CompileException {
     String node_file_name = target_base + node_name + NODE_FILENAME_EXTENSION;
 
-    Debug.println_dbg("reading node(" + node_name + ") on (" + node_file_name + ")");
+    LOG.debug("reading node(" + node_name + ") on (" + node_file_name + ")");
     FileInputStream fis = null;
     try {
       fis = new FileInputStream(node_file_name);
@@ -851,11 +855,11 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
     if (src_func_type.is_apply()) {
       FuncSignatureDesc src_sig = src_func_type.getFuncSignatureDesc();
       Debug.assertion(src_sig != null, "src_sig should be valid");
-      Debug.println_dbg("src_sig:" + src_sig);
+      LOG.debug("src_sig:" + src_sig);
 
       FuncSignatureDesc tgt_sig = mh_type.getFuncSignatureDesc();
       Debug.assertion(tgt_sig != null, "tgt_sig should be valid");
-      Debug.println_dbg("tgt_sig:" + tgt_sig);
+      LOG.debug("tgt_sig:" + tgt_sig);
 
       return (src_sig.getParameterTypeList().size() == tgt_sig.getParameterTypeList().size());
       /*
@@ -891,7 +895,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
       }
 
       // if tgtclass is ancestor class of srcclass
-      Debug.println_dbg("descendent checking: srcclass:" + srcclass + ", tgtclass:" + tgtclass);
+      LOG.debug("descendent checking: srcclass:" + srcclass + ", tgtclass:" + tgtclass);
       if (srcclass.isDescendentOf(tgtclass)) {
         return true;
       }
@@ -963,7 +967,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
           // var arg list ).
           // Compiler automatically add String[0] following the "./a"
 
-          Debug.println_dbg("last_idx=" + tgt_last_param_idx + " paratype_list.size()=" + invoke_paratype_list.size());
+          LOG.debug("last_idx=" + tgt_last_param_idx + " paratype_list.size()=" + invoke_paratype_list.size());
           if (invoke_paratype_list.isImpliedCastibleTypeInRange(ele_type, tgt_last_param_idx,
               invoke_paratype_list.size() - 1, this)) {
             return true;
@@ -979,7 +983,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
           // var arg list ).
           // Compiler automatically add String[0] following the "./a"
 
-          Debug.println_dbg("last_idx=" + tgt_last_param_idx + " paratype_list.size()=" + invoke_paratype_list.size());
+          LOG.debug("last_idx=" + tgt_last_param_idx + " paratype_list.size()=" + invoke_paratype_list.size());
           if (invoke_paratype_list.isEqualTypeInRange(ele_type, tgt_last_param_idx, invoke_paratype_list.size() - 1)) {
             return true;
           }

@@ -6,10 +6,14 @@ import mezic.compiler.Container;
 import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpBooleanObj extends OpObject {
 
   private static final long serialVersionUID = 4013441250656647388L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpBooleanObj.class);
 
   public OpBooleanObj(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -46,7 +50,7 @@ public class OpBooleanObj extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName(TPrimitiveClass.NAME_BOOL)) {
-      Debug.println_info("CHANGE java/lang/Boolean->Z");
+      LOG.info("CHANGE java/lang/Boolean->Z");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull(TPrimitiveClass.NAME_BOOL);

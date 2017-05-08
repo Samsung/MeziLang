@@ -2,6 +2,9 @@ package mezic.compiler.type;
 
 import java.util.LinkedList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mezic.compiler.CompileException;
 import mezic.compiler.CompilerLoader;
 import mezic.compiler.Debug;
@@ -10,6 +13,8 @@ import mezic.util.TypeUtil;
 public class AbsTypeList extends LinkedList<AbsType> {
 
   private static final long serialVersionUID = 8886558343759302270L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(AbsTypeList.class);
 
   public String getMthdDsc() throws CompileException {
     String dsc_str = "";
@@ -69,7 +74,7 @@ public class AbsTypeList extends LinkedList<AbsType> {
       src_type = this.get(i);
       Debug.assertion(src_type != null, "src_type should be valid");
 
-      // Debug.println_dbg("tgt_type["+tgt_type+"] src_type["+src_type+"]");
+      // LOG.debug("tgt_type["+tgt_type+"] src_type["+src_type+"]");
       if (!src_type.getMthdDscStr().equals(tgt_type.getMthdDscStr())) {
         return false;
       }
@@ -86,7 +91,7 @@ public class AbsTypeList extends LinkedList<AbsType> {
       src_type = this.get(i);
       Debug.assertion(src_type != null, "src_type should be valid");
 
-      // Debug.println_dbg("tgt_type["+tgt_type+"] src_type["+src_type+"]");
+      // LOG.debug("tgt_type["+tgt_type+"] src_type["+src_type+"]");
       if (!cpLoader.isImpliedCastible(src_type, tgt_type)) {
         return false;
       }
@@ -101,7 +106,7 @@ public class AbsTypeList extends LinkedList<AbsType> {
     AbsTypeList tgt_abstype_list = new AbsTypeList();
     String[] tgt_abstype_split = TypeUtil.splitArgTypeDsc(tgt_type_dsc);
 
-    Debug.println_dbg(" Constructing Parameter Type List from (" + tgt_type_dsc + ")");
+    LOG.debug(" Constructing Parameter Type List from (" + tgt_type_dsc + ")");
 
     for (int i = 0; i < tgt_abstype_split.length; i++) {
       tgt_type_name = TypeUtil.dsc2name(tgt_abstype_split[i]);

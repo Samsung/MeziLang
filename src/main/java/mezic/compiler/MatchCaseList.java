@@ -3,6 +3,8 @@ package mezic.compiler;
 import java.util.LinkedList;
 
 import org.objectweb.asm.Label;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class MatchCaseEntry {
   public int const_val = 0;
@@ -12,6 +14,8 @@ class MatchCaseEntry {
 public class MatchCaseList extends LinkedList<MatchCaseEntry> {
 
   private static final long serialVersionUID = -4407672227824544756L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(MatchCaseList.class);
 
   public boolean has(int const_val) {
     int size = this.size();
@@ -103,7 +107,7 @@ public class MatchCaseList extends LinkedList<MatchCaseEntry> {
     for (int i = 0; i < size; i++) {
       entry = this.get(i);
 
-      Debug.println_dbg("entry.const_val=" + entry.const_val + " entry.label=" + entry.label);
+      LOG.debug("entry.const_val=" + entry.const_val + " entry.label=" + entry.label);
     }
 
   }

@@ -9,10 +9,14 @@ import mezic.parser.ParserTreeConstants;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpBool extends OpObject {
 
   private static final long serialVersionUID = 7769559067341011833L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpBool.class);
 
   public OpBool(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -33,7 +37,7 @@ public class OpBool extends OpObject {
     if (lval.getForm() == Container.FORM_FUNSTACK_VAR) {
       //// Compiled Instruction
       opinfo.mv.visitVarInsn(Opcodes.ISTORE, lval.getContextVarIdx());
-      Debug.println_info("ISTORE" + lval.getContextVarIdx() + " for Boolean");
+      LOG.info("ISTORE" + lval.getContextVarIdx() + " for Boolean");
       //// End
       lval.setAssigned(true);
     } else if (lval.getForm() == Container.FORM_OBJMEMBER_VAR) {
@@ -53,7 +57,7 @@ public class OpBool extends OpObject {
       }
 
       /*
-       * Debug.println_info("PUTFIELD "+ src_type.getName()+ ":" +
+       * LOG.info("PUTFIELD "+ src_type.getName()+ ":" +
        * lval.getName()+"("+sub_ref_type.getMthdDscStr()+")"); //// Compiled
        * Instruction opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD,
        * src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr()); ////
@@ -61,11 +65,11 @@ public class OpBool extends OpObject {
        */
 
       if (lval.isSingleton()) {
-        Debug.println_info(
+        LOG.info(
             "PUTSTATIC " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       } else {
-        Debug.println_info(
+        LOG.info(
             "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       }
@@ -299,10 +303,10 @@ public class OpBool extends OpObject {
 
     if (bool_val) {
       opinfo.mv.visitInsn(Opcodes.ICONST_1);
-      Debug.println_info("ICONST_1 for boolean");
+      LOG.info("ICONST_1 for boolean");
     } else {
       opinfo.mv.visitInsn(Opcodes.ICONST_0);
-      Debug.println_info("ICONST_0 for boolean");
+      LOG.info("ICONST_0 for boolean");
     }
 
   }
@@ -310,29 +314,29 @@ public class OpBool extends OpObject {
   @Override
   public void store(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.ISTORE, index);
-    Debug.println_info("ISTORE_" + index + " for Boolean");
+    LOG.info("ISTORE_" + index + " for Boolean");
   }
 
   @Override
   public void load_funcstack_variable(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.ILOAD, index);
-    Debug.println_info("ILOAD_" + index + " for Boolean");
+    LOG.info("ILOAD_" + index + " for Boolean");
   }
 
   @Override
   public void return_variable(Container lval, OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.IRETURN);
-    Debug.println_info("IRETURN" + " for Boolean");
+    LOG.info("IRETURN" + " for Boolean");
   }
 
   @Override
   public void return_dummy_variable(OpInfo opinfo) throws CompileException {
 
     opinfo.mv.visitInsn(Opcodes.ICONST_1);
-    Debug.println_info("ICONST_1 for boolean");
+    LOG.info("ICONST_1 for boolean");
 
     opinfo.mv.visitInsn(Opcodes.IRETURN);
-    Debug.println_info("IRETURN" + " for Boolean");
+    LOG.info("IRETURN" + " for Boolean");
   }
 
   @Override
@@ -369,13 +373,13 @@ public class OpBool extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgt_type, OpInfo opinfo) throws CompileException {
     if (tgt_type.isName("java/lang/Boolean") || tgt_type.isName("java/lang/Object")) {
-      Debug.println_info("CONVERT Z->java/lang/Boolean");
+      LOG.info("CONVERT Z->java/lang/Boolean");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/Boolean");
       return type;
     } else if (tgt_type.isName("java/lang/String")) {
-      Debug.println_info("CHANGE Z->java/lang/String");
+      LOG.info("CHANGE Z->java/lang/String");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Boolean", "toString", "(Z)Ljava/lang/String;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/String");
@@ -391,7 +395,7 @@ public class OpBool extends OpObject {
     opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/Boolean");
     opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false);
 
-    Debug.println_info("CAST to I");
+    LOG.info("CAST to I");
   }
 
 }

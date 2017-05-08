@@ -6,10 +6,14 @@ import mezic.compiler.Container;
 import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpFloatObj extends OpObject {
 
   private static final long serialVersionUID = -1633938210091671545L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpFloatObj.class);
 
   public OpFloatObj(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -46,7 +50,7 @@ public class OpFloatObj extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName(TPrimitiveClass.NAME_FLOAT)) {
-      Debug.println_info("CHANGE java/lang/Float -> F");
+      LOG.info("CHANGE java/lang/Float -> F");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull(TPrimitiveClass.NAME_FLOAT);

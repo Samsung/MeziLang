@@ -159,7 +159,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
     Container cont = (Container) reduce;
     AbsType type = cont.getType();
     Debug.assertion(type != null, "Type should not be invalid");
-    Debug.println_dbg("Auto Cast " + type.getMthdDscStr() + "->" + converting_type.getMthdDscStr());
+    LOG.debug("Auto Cast " + type.getMthdDscStr() + "->" + converting_type.getMthdDscStr());
 
     cont.op().type_convert(cont, converting_type, opinfo);
 
@@ -295,17 +295,17 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
         // super class default constructor call
         if (super_class != null) {
-          Debug.print_info("ALOAD 0");
-          Debug.print_info("INVOKESPECIAL " + super_class_name + " <init> ()V");
+          LOG.info("ALOAD 0");
+          LOG.info("INVOKESPECIAL " + super_class_name + " <init> ()V");
 
           mv.visitVarInsn(Opcodes.ALOAD, 0); // this
           mv.visitMethodInsn(Opcodes.INVOKESPECIAL, super_class_name, "<init>", "()V", false);
         }
 
         if (Debug.enable_compile_debug_print) {
-          // Debug.print_info("GETSTATIC java/lang/System.out");
-          // Debug.print_info("LDC "+class_name+" was instantiated");
-          // Debug.print_info("INVOKEVIRTUAL java/io/PrintStream.println");
+          // LOG.info("GETSTATIC java/lang/System.out");
+          // LOG.info("LDC "+class_name+" was instantiated");
+          // LOG.info("INVOKEVIRTUAL java/io/PrintStream.println");
           mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
           mv.visitLdcInsn(class_name + " was instantiated");
           mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
@@ -414,7 +414,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       String class_name = class_ctx.getName();
 
       try {
-        Debug.println_dbg("Writing Class File(" + class_name + ")");
+        LOG.debug("Writing Class File(" + class_name + ")");
         //byte[] code = cpLoader.writeClassFile(cw, class_name);
         cpLoader.writeClassFile(cw, class_name);
 
@@ -566,7 +566,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
     int size = excptype_list.size();
     for (int i = 0; i < size; i++) {
       excptype = excptype_list.get(i);
-      Debug.println_dbg("trycatch block for exception " + excptype);
+      LOG.debug("trycatch block for exception " + excptype);
       mv.visitTryCatchBlock(streamblock_start_label, streamblock_end_label, catch_label, excptype.getName());
     }
 
@@ -658,12 +658,12 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       if (var_cont.isForm(Container.FORM_FUNSTACK_VAR)) {
         // only assigned stack variable will be copied
         if (var_cont.isAssigned()) {
-          Debug.println_dbg("  (" + var_cont.getContextVarIdx() + ") " + var_cont);
+          LOG.debug("  (" + var_cont.getContextVarIdx() + ") " + var_cont);
           var_type = var_cont.getType();
           cw.visitField(Opcodes.ACC_PUBLIC, var_cont.getName(), var_type.getMthdDscStr(), null, null).visitEnd();
         }
       } else if (var_cont.isForm(Container.FORM_OBJMEMBER_VAR)) {
-        Debug.println_dbg("  (" + var_cont.getContextVarIdx() + ") " + var_cont);
+        LOG.debug("  (" + var_cont.getContextVarIdx() + ") " + var_cont);
         var_type = var_cont.getType();
         cw.visitField(Opcodes.ACC_PUBLIC, var_cont.getName(), var_type.getMthdDscStr(), null, null).visitEnd();
       } else {
@@ -706,7 +706,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       }
 
       if (func_context.is_constructor()) {
-        Debug.println_dbg(" Creating Constructor...(" + func_name + ":" + func_desc_str + ")");
+        LOG.debug(" Creating Constructor...(" + func_name + ":" + func_desc_str + ")");
 
         String super_class_name = null;
         AbsClassType super_class = class_context.getSuperClass();
@@ -738,7 +738,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
         addLineLable(mv, node.jjtGetFirstToken().beginLine);
       } else {
-        Debug.println_dbg(" Creating Function...(" + func_name + ":" + func_desc_str + ")");
+        LOG.debug(" Creating Function...(" + func_name + ":" + func_desc_str + ")");
 
         int access = 0;
         access |= Opcodes.ACC_PUBLIC;
@@ -799,7 +799,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
     case LangUnitNode.FUNCFORM_STATIC:
       Debug.assertion(func_ctx.isForm(AbsType.FORM_FUNC),
           "Context Type should be Function, but " + func_ctx.getFormString(func_ctx.getForm()));
-      Debug.println_dbg(" Building Function...(" + func_ctx.getName() + ")");
+      LOG.debug(" Building Function...(" + func_ctx.getName() + ")");
 
       AbsType func_ret_type = ((AbsFuncType) func_ctx).getReturnType(cpLoader);
 
@@ -856,7 +856,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
     // write class file
     try {
-      Debug.println_dbg("Writing Class File(" + closure_ctx.getName() + ")");
+      LOG.debug("Writing Class File(" + closure_ctx.getName() + ")");
       //byte[] code = cpLoader.writeClassFile(cw, closure_ctx.getName());
       cpLoader.writeClassFile(cw, closure_ctx.getName());
 
@@ -869,7 +869,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
   }
 
   private void generateClosureContextCopyInst(TContext closure_ctx, OpInfo opinfo) throws CompileException {
-    Debug.println_dbg("generateClosureContextCopyInst");
+    LOG.debug("generateClosureContextCopyInst");
 
     Debug.assertion(closure_ctx instanceof TContextClosure, "closure_ctx should be closure ctx");
 
@@ -897,7 +897,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
       if (var_cont.isForm(Container.FORM_FUNSTACK_VAR)) {
         if (var_cont.isAssigned()) {
-          Debug.println_dbg(" Add Copy Instruction (" + var_cont.getContextVarIdx() + ") " + var_cont);
+          LOG.debug(" Add Copy Instruction (" + var_cont.getContextVarIdx() + ") " + var_cont);
 
           var_type = var_cont.getType();
           opinfo.mv.visitInsn(DUP); // duplicate closure class instances
@@ -909,7 +909,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
                                                                   // closure
                                                                   // case
 
-        Debug.println_dbg(" Add Copy Instruction (" + var_cont.getContextVarIdx() + ") " + var_cont);
+        LOG.debug(" Add Copy Instruction (" + var_cont.getContextVarIdx() + ") " + var_cont);
 
         var_type = var_cont.getType();
 
@@ -991,7 +991,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
     // stream is code block
     if (ref_node.hasDefinitionRefernce()) {
-      Debug.println_dbg("langstream_ele_add(" + reduce + ")");
+      LOG.debug("langstream_ele_add(" + reduce + ")");
 
       if (!reduce.isContainer()) {
         return; // if it is not container, do nothing
@@ -1000,7 +1000,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       type = cont.getType();
 
       if (cont.isForm(Container.FORM_OPSTACK_VAR) && !type.isName(TPrimitiveClass.NAME_VOID)) {
-        Debug.println_dbg("Call POP for type(" + type + ")");
+        LOG.debug("Call POP for type(" + type + ")");
         type.op().pop(cont, new OpInfo(getTopContext()));
       }
     } else { // this stream is not code block, but stream instance
@@ -1026,7 +1026,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
           }
 
         }
-        Debug.println_dbg("Add Container(" + cont + ") to AreAM");
+        LOG.debug("Add Container(" + cont + ") to AreAM");
 
         // temporal for stream
         // opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
@@ -1251,7 +1251,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
     if (child_node.getContainer() == null) {// Child Node might not push any
                                             // reduction.
-      Debug.println_dbg("Access child Node does not have container and it is not function call");
+      LOG.debug("Access child Node does not have container and it is not function call");
 
       if (topReduction() != null && topReduction().isContainer()) {
         checkDup(node, (Container) topReduction());
@@ -1280,7 +1280,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
       switch (type.getForm()) {
       case AbsType.FORM_PKG:
-        Debug.println_dbg("Package(" + type + ")");
+        LOG.debug("Package(" + type + ")");
         // package container is not used any more.(sub-access elements was
         // already resolved)
         break;
@@ -1290,7 +1290,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
         // preparation for creating multi-dimension map in one time
         // - int[10][10][10] ( int[10][][] style does not necessary this work)
         int map_dimension = cntSubRefChildNodeIdChain(ref_node, JJTMAPACCESS);
-        Debug.println_dbg("map_dimension=" + map_dimension);
+        LOG.debug("map_dimension=" + map_dimension);
         if (map_dimension >= 2) {
           prepare_multidimension_map_creation(type, map_dimension, new OpInfo(getTopContext()));
         }
@@ -1342,7 +1342,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
         }
 
         if (node.isAssignTgt()) {
-          Debug.println_dbg("node is assign target, do not load");
+          LOG.debug("node is assign target, do not load");
           pushReduction(access_cont);
         } else {
           Container loaded_obj = access_cont.op().load_variable(access_cont, owner_cont, new OpInfo(getTopContext()));
@@ -1395,7 +1395,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
     if (child_node.getContainer() == null) { // Child Node might not push any
                                              // reduction.
-      Debug.println_dbg("Sub Access child Node does not have container in " + child_node);
+      LOG.debug("Sub Access child Node does not have container in " + child_node);
 
       dump_reduction_stack();
       Debug.stop();
@@ -1420,7 +1420,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
     case Container.FORM_TYPE: {
       switch (subaccess_type.getForm()) {
       case AbsType.FORM_PKG: {
-        Debug.println_dbg("Package(" + subaccess_type + ")");
+        LOG.debug("Package(" + subaccess_type + ")");
         // package container is not used any more.(underlying element was
         // already resolved)
       }
@@ -1429,7 +1429,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       case AbsType.FORM_CLASS: {
 
         int map_dimension = cntSubRefChildNodeIdChain(ref_node, JJTMAPACCESS);
-        Debug.println_dbg("map_dimension=" + map_dimension);
+        LOG.debug("map_dimension=" + map_dimension);
         if (map_dimension >= 2) {
           prepare_multidimension_map_creation(subaccess_type, map_dimension, new OpInfo(getTopContext()));
         }
@@ -1490,15 +1490,15 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       Debug.assertion(owner_reduce != null, "Invalid Popped Reduction");
       Debug.assertion(owner_reduce.isContainer(), "Invalid Popped Reduction " + reduce);
 
-      Debug.println_dbg("owner_reduce=" + owner_reduce);
+      LOG.debug("owner_reduce=" + owner_reduce);
 
       Container owner_cont = (Container) owner_reduce;
       Debug.assertion(owner_cont.isTypeInitialized(), "Owner Container should be type initialized");
 
       if (subaccess_cont.getOwnerContainer() == null) {
         // member variable of Resolved Class will not have owner container
-        Debug.println_dbg("owner_cont: " + owner_cont);
-        Debug.println_dbg("subaccess_cont: " + subaccess_cont);
+        LOG.debug("owner_cont: " + owner_cont);
+        LOG.debug("subaccess_cont: " + subaccess_cont);
         subaccess_cont.initOwnerContainer(owner_cont);
       }
 
@@ -1511,7 +1511,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       if (child_node.isNodeId(JJTFUNCTIONDEF) && subaccess_type instanceof TMethodHandle) {
         // MethodHandle object has been already loaded in SymboleName or
         // Function
-        Debug.println_dbg("sub access child is closure");
+        LOG.debug("sub access child is closure");
 
         // funcdef_cont container is configured by SubSymboResolver-ASTInvoke.
         // 'apply_at_invoke_sub'
@@ -1531,7 +1531,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
         pushReduction(subaccess_cont);
       } else if (node.isAssignTgt()) {
-        Debug.println_dbg("sub access is assign target, do not load");
+        LOG.debug("sub access is assign target, do not load");
         pushReduction(subaccess_cont);
       } else {
         if (!owner_cont.isForm(Container.FORM_TYPE)) {
@@ -1699,7 +1699,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
     Container loaded_obj = null;
 
-    Debug.println_dbg("Method Handle Call : " + mh_type);
+    LOG.debug("Method Handle Call : " + mh_type);
 
     FuncSignatureDesc funcsig = mh_type.getFuncSignatureDesc();
     Debug.assertion(funcsig != null, "fucsig should be valid");
@@ -1751,8 +1751,8 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
     Debug.assertion(mthdDsc != null, "Invalid Method Descriptor");
 
     if (((AbsFuncType) functiontype).is_constructor()) {
-      Debug.println_dbg("Instantiate Class   :" + classType.getName());
-      Debug.println_dbg("Instantiate Constructor:" + functiontype);
+      LOG.debug("Instantiate Class   :" + classType.getName());
+      LOG.debug("Instantiate Constructor:" + functiontype);
 
       // 'New' Instruction is added in ASTSymbolName
 
@@ -1764,8 +1764,8 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       pushReduction(class_obj);
 
     } else {
-      Debug.println_dbg("Function Call Class   :" + classType.getName());
-      Debug.println_dbg(
+      LOG.debug("Function Call Class   :" + classType.getName());
+      LOG.debug(
           "Function Call Function:" + functiontype + " is_static:" + ((AbsFuncType) functiontype).is_static());
 
       if (((AbsFuncType) functiontype).is_static()) {
@@ -1806,7 +1806,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
     String mthdDsc = functiontype.getMthdDscStr();
     Debug.assertion(mthdDsc != null, "Invalid Method Descriptor");
 
-    Debug.println_dbg("Invoking Constructor:" + functiontype);
+    LOG.debug("Invoking Constructor:" + functiontype);
 
     //// Compiled Instruction
     mv.visitMethodInsn(Opcodes.INVOKESPECIAL, classType.getName(), functiontype.getName(), mthdDsc, false);
@@ -1893,7 +1893,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       LangUnitNode sub_ref_node = (LangUnitNode) node.jjtGetParent();
       Debug.assertion(sub_ref_node.isNodeId(JJTSUBREFERENCE), "ref_node should be subref node");
 
-      Debug.println_dbg("src_type=" + src_type);
+      LOG.debug("src_type=" + src_type);
       if (isNextSubRefChildNodeid(sub_ref_node, JJTMAPACCESS)) {
         // [case-01]
         // map creation - int[10][10][10] : creating 'int[10][10][10]' in one
@@ -1907,7 +1907,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
         // array preparation is done in 'prepare_multidimension_map_creation()'
 
         // length value loading instruction was already added
-        Debug.println_dbg("IASTORE");
+        LOG.debug("IASTORE");
         opinfo.mv.visitInsn(Opcodes.IASTORE);
 
         LOG.info("DUP");
@@ -1939,7 +1939,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
           // V
           // map creation-int[10][10][10] : final map dim
 
-          Debug.println_dbg("IASTORE");
+          LOG.debug("IASTORE");
           opinfo.mv.visitInsn(Opcodes.IASTORE);
 
           LOG.info("INVOKESTATIC  java/lang/reflect/Array/newInstance");
@@ -1967,7 +1967,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
           throw new CompileException("Map Assign is allowed only for map type, but " + src_type);
         }
 
-        Debug.println_dbg("MapAccess for Assign Target(src_cont:" + src_cont + ", key_cont: " + key_cont + ")");
+        LOG.debug("MapAccess for Assign Target(src_cont:" + src_cont + ", key_cont: " + key_cont + ")");
 
         AbsType map_ele_type = ((TMapType) src_type).getElementType();
         Debug.assertion(map_ele_type != null, "map_ele_type should be valid");
@@ -1979,7 +1979,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
         ret_obj = map_ele_cont;
 
       } else {
-        Debug.println_dbg("MapAccess for LOAD(src_cont:" + src_cont + ", key_cont: " + key_cont + ")");
+        LOG.debug("MapAccess for LOAD(src_cont:" + src_cont + ", key_cont: " + key_cont + ")");
 
         if (node.isSetDup2()) {
           opinfo.mv.visitInsn(Opcodes.DUP2);
@@ -2007,7 +2007,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
     for (int i = 0; i < CompilerLoader.MAX_SUB_REF_LEVEL; i++) {
       subref_node = getNextChildSubRefeNode(subref_node);
-      Debug.println_dbg("getNextChildSubRefeNode:" + subref_node);
+      LOG.debug("getNextChildSubRefeNode:" + subref_node);
       if (subref_node == null) {
         return cnt;
       }
@@ -2152,7 +2152,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
     Debug.assertion(field_type != null, "Container Type should not be null");
 
     //// Compiled Instruction
-    Debug.println_dbg(
+    LOG.debug(
         "Adding Field(" + container.name + ":" + field_type.getMthdDscStr() + ") in (" + class_ctx.getName() + ")");
 
     int access = 0;
@@ -2171,7 +2171,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
   public Object visit(ASTConstant node, Object data) throws CompileException {
 
     Container cont = node.getContainer();
-    Debug.println_dbg("AST Constant: " + cont);
+    LOG.debug("AST Constant: " + cont);
     pushReduction(cont);
 
     return null; // constant node always push container
@@ -2260,13 +2260,13 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
     TContextFunc func_context = getClosestFunContext();
     AbsType func_ret_type = ((AbsFuncType) func_context).getReturnType(cpLoader);
     Debug.assertion(func_ret_type != null, "Reduce Type is not defined");
-    Debug.println_dbg("REDUCE TYPE:" + func_ret_type);
+    LOG.debug("REDUCE TYPE:" + func_ret_type);
 
     OpInfo opinfo = new OpInfo(getTopContext());
 
     switch (node.jjtGetNumChildren()) {
     case 0:
-      Debug.print_info("RETURN with no return value");
+      LOG.info("RETURN with no return value");
       opinfo.mv.visitInsn(RETURN);
       break;
 
@@ -2277,7 +2277,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       Container ret_cont = (Container) reduce;
       Debug.assertion(ret_cont.isTypeInitialized(), "Reducing Type is not initialized in the function signature");
 
-      Debug.println_dbg("CONT TYPE:" + ret_cont.getType());
+      LOG.debug("CONT TYPE:" + ret_cont.getType());
 
       Debug.assertion(!ret_cont.isForm(Container.FORM_TYPE), "ret_cont should not be type container");
 
@@ -2303,10 +2303,10 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
       Container throw_cont = (Container) reduce;
       Debug.assertion(throw_cont.isTypeInitialized(), "Throw Type is not initialized in the function signature");
 
-      Debug.println_dbg("CONT TYPE:" + throw_cont.getType());
+      LOG.debug("CONT TYPE:" + throw_cont.getType());
       Debug.assertion(!throw_cont.isForm(Container.FORM_TYPE), "throw_cont should not be type container");
 
-      Debug.println_dbg("ATHROW");
+      LOG.debug("ATHROW");
       mv.visitInsn(Opcodes.ATHROW);
       break;
 

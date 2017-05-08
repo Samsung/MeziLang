@@ -6,10 +6,14 @@ import mezic.compiler.Container;
 import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpChar extends OpShort {
 
   private static final long serialVersionUID = 5052711291118269650L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpChar.class);
 
   public OpChar(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -30,7 +34,7 @@ public class OpChar extends OpShort {
     if (lval.getForm() == Container.FORM_FUNSTACK_VAR) {
       //// Compiled Instruction
       opinfo.mv.visitVarInsn(Opcodes.ISTORE, lval.getContextVarIdx());
-      Debug.println_info("ISTORE" + lval.getContextVarIdx());
+      LOG.info("ISTORE" + lval.getContextVarIdx());
       //// End
       lval.setAssigned(true);
     } else if (lval.getForm() == Container.FORM_OBJMEMBER_VAR) {
@@ -50,11 +54,11 @@ public class OpChar extends OpShort {
       }
 
       if (lval.isSingleton()) {
-        Debug.println_info(
+        LOG.info(
             "PUTSTATIC " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       } else {
-        Debug.println_info(
+        LOG.info(
             "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       }
@@ -65,7 +69,7 @@ public class OpChar extends OpShort {
       Debug.assertion(src_cont.isTypeInitialized(), "lval_owner should be type initialized");
       Debug.assertion(src_cont.getType() instanceof TMapType, "lval_owner type should be TMapType");
 
-      Debug.println_dbg("CASTORE");
+      LOG.debug("CASTORE");
       opinfo.mv.visitInsn(Opcodes.CASTORE);
     } else {
       throw new CompileException("Invalid lval form(" + lval + ")");
@@ -109,16 +113,16 @@ public class OpChar extends OpShort {
       default:
         // do nothing
       }
-      Debug.println_info("ICONST_" + char_val);
+      LOG.info("ICONST_" + char_val);
     } else if (char_val >= 6 && char_val <= 127) {
       opinfo.mv.visitIntInsn(Opcodes.BIPUSH, char_val);
-      Debug.println_info("BIPUSH_" + char_val);
+      LOG.info("BIPUSH_" + char_val);
     } else if (char_val >= 128 && char_val <= 32767) {
       opinfo.mv.visitIntInsn(Opcodes.SIPUSH, char_val);
-      Debug.println_info("SIPUSH_" + char_val);
+      LOG.info("SIPUSH_" + char_val);
     } else if (char_val >= 32768 && char_val <= 65535) {
       opinfo.mv.visitLdcInsn(char_val);
-      Debug.println_info("LDC_" + char_val);
+      LOG.info("LDC_" + char_val);
     } else {
       throw new CompileException("Out of Character boundary(" + char_val + ")");
     }
@@ -140,14 +144,14 @@ public class OpChar extends OpShort {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/Character") || tgttype.isName("java/lang/Object")) {
-      Debug.println_info("CHANGE C->java/lang/Character");
+      LOG.info("CHANGE C->java/lang/Character");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Character", "valueOf", "(C)Ljava/lang/Character;",
           false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/Character");
       return type;
     } else if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("CHANGE C->java/lang/String");
+      LOG.info("CHANGE C->java/lang/String");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Character", "toString", "(C)Ljava/lang/String;",
           false);
 
@@ -164,7 +168,7 @@ public class OpChar extends OpShort {
     opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/Character");
     opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C", false);
 
-    Debug.println_info("CAST to C");
+    LOG.info("CAST to C");
   }
 
 }

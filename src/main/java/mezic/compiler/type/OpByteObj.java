@@ -6,10 +6,14 @@ import mezic.compiler.Container;
 import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpByteObj extends OpObject {
 
   private static final long serialVersionUID = 8762915333320854224L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpByteObj.class);
 
   public OpByteObj(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -46,7 +50,7 @@ public class OpByteObj extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName(TPrimitiveClass.NAME_BYTE)) {
-      Debug.println_info("CHANGE java/lang/Byte -> B");
+      LOG.info("CHANGE java/lang/Byte -> B");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull(TPrimitiveClass.NAME_BYTE);

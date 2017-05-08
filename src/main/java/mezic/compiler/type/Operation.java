@@ -1,5 +1,8 @@
 package mezic.compiler.type;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mezic.compiler.CompileException;
 import mezic.compiler.CompilerLoader;
 import mezic.compiler.Container;
@@ -11,6 +14,8 @@ import mezic.parser.ParserConstants;
 public class Operation extends Reduction {
 
   private static final long serialVersionUID = 1982486570969317763L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(Operation.class);
 
   private int opcode;
 
@@ -359,7 +364,7 @@ public class Operation extends Reduction {
         Debug.assertion(assign_parent_node != null, "assign_parent_node should be valid");
 
         if (assign_parent_node.requiringOpStackRvalue()) {
-          Debug.println_dbg("assign_rvalue_dup");
+          LOG.debug("assign_rvalue_dup");
           lvalue.op().assign_rvalue_dup(lvalue, rvalue, opinfo);
           retCont = lvalue.op().assign(lvalue, rvalue, opinfo);
         } else {

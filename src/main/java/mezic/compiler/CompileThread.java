@@ -2,10 +2,15 @@ package mezic.compiler;
 
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mezic.parser.ASTTranslationUnit;
 import mezic.parser.ParseException;
 
 public class CompileThread extends Thread {
+	
+  private static final Logger LOG = LoggerFactory.getLogger(CompileThread.class);
 
   private int thread_id = -1;
   private ASTTraverseVisitor visitor;
@@ -87,8 +92,8 @@ public class CompileThread extends Thread {
     for (int i = 0; i < tu_names.length; i++) {
       try {
         // create symbol table
-        Debug.println_dbg("\n#\n# ContextBuild");
-        Debug.println_dbg("...........................................................\n");
+        LOG.debug("\n#\n# ContextBuild");
+        LOG.debug("...........................................................\n");
         visitor = new ASTContextBuildVisitor(loader, tu_names[i]);
         visitor.traverse(translation_units[i]);
       } catch (CompileException e) {
@@ -104,8 +109,8 @@ public class CompileThread extends Thread {
       try {
 
         // resolving symbol
-        Debug.println_dbg("\n#\n# SymbolResolving");
-        Debug.println_dbg("...........................................................\n");
+        LOG.debug("\n#\n# SymbolResolving");
+        LOG.debug("...........................................................\n");
         visitor = new ASTSymbolResolvingVisitor(loader);
         visitor.traverse(translation_units[i]);
         visitor.check_reduction_stack_empty();
@@ -123,8 +128,8 @@ public class CompileThread extends Thread {
       try {
 
         // resolving sub symbo
-        Debug.println_dbg("\n#\n# SubSymbolResolving");
-        Debug.println_dbg("...........................................................\n");
+        LOG.debug("\n#\n# SubSymbolResolving");
+        LOG.debug("...........................................................\n");
         visitor = new ASTSubSymbolResolvingVisitor(loader);
         ((ASTSubSymbolResolvingVisitor) visitor).dependency_traverse(translation_units[i]);
         // visitor.traverse(translation_unit);
@@ -142,8 +147,8 @@ public class CompileThread extends Thread {
     for (int i = 0; i < tu_names.length; i++) {
       try {
         // compile
-        Debug.println_dbg("\n#\n# Compiling");
-        Debug.println_dbg("...........................................................\n");
+        LOG.debug("\n#\n# Compiling");
+        LOG.debug("...........................................................\n");
         visitor = new ASTCompileVisitor(loader);
         visitor.traverse(translation_units[i]);
         visitor.check_reduction_stack_empty();
