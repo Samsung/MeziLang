@@ -3,13 +3,16 @@ package mezic.compiler.type;
 import mezic.compiler.CompileException;
 import mezic.compiler.CompilerLoader;
 import mezic.compiler.Container;
-import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpShortObj extends OpObject {
 
   private static final long serialVersionUID = -9059456676899719574L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpShortObj.class);
 
   public OpShortObj(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -46,7 +49,7 @@ public class OpShortObj extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName(TPrimitiveClass.NAME_SHORT)) {
-      Debug.println_info("CHANGE java/lang/Short -> S");
+      LOG.info("CHANGE java/lang/Short -> S");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull(TPrimitiveClass.NAME_SHORT);

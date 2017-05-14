@@ -11,10 +11,14 @@ import mezic.compiler.Debug;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpFunction extends OpObject {
 
   private static final long serialVersionUID = -7302343190978333299L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpFunction.class);
 
   public OpFunction(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -42,7 +46,7 @@ public class OpFunction extends OpObject {
   @Override
   public AbsType type_convert(Container rval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("java/lang/Object->java/lang/String");
+      LOG.info("java/lang/Object->java/lang/String");
 
       return string_type_convert(rval, opinfo);
     } else if (tgttype.isName(TPrimitiveClass.NAME_VOID)) { // for null
@@ -85,7 +89,7 @@ public class OpFunction extends OpObject {
     // return value of 'mh.invoke(arg ...)' should be compatible to that of
     // tgt_if_type
 
-    Debug.println_dbg("compatibility checking " + tgt_if_desc + " -> " + r_mh_desc);
+    LOG.debug("compatibility checking " + tgt_if_desc + " -> " + r_mh_desc);
 
     // parameter type implied castibility checking (tgt_if_desc -> r_mh_desc)
     if (!cpLoader.isImpliedCastibleParameterList(tgt_if_desc.getParameterTypeList(), r_mh_desc.getParameterTypeList())) {
@@ -109,7 +113,7 @@ public class OpFunction extends OpObject {
         + (func_context.getName().equals("<init>") ? "init" : func_context.getName())
         + ((TContextFunc) func_context).allocFunctionalIfImplName();
 
-    Debug.println_dbg("generating [" + func_if_implclass_name + "]");
+    LOG.debug("generating [" + func_if_implclass_name + "]");
 
     gen_functional_if_impl_class(func_if_implclass_name, tgt_if_type, tgt_if_abs_method, r_mh_type);
 
@@ -117,10 +121,10 @@ public class OpFunction extends OpObject {
     Debug.assertion(func_if_impl_type != null, "func_if_impl_type should be valid");
 
     // instantiate functional interface impl class
-    Debug.println_info("Opcodes.NEW " + func_if_impl_type.getName());
-    Debug.println_info("DUP_X1");
-    Debug.println_info("SWAP");
-    Debug.println_info("INVOKESPECIAL" + func_if_impl_type.getName());
+    LOG.info("Opcodes.NEW " + func_if_impl_type.getName());
+    LOG.info("DUP_X1");
+    LOG.info("SWAP");
+    LOG.info("INVOKESPECIAL" + func_if_impl_type.getName());
 
     opinfo.mv.visitTypeInsn(Opcodes.NEW, func_if_impl_type.getName());
     // opstack already had method handle reference(parameter of functional
@@ -136,7 +140,7 @@ public class OpFunction extends OpObject {
   }
 
   private AbsFuncType get_functional_if_abs_mthd(AbsClassType if_type, int num_params) throws CompileException {
-    Debug.println_dbg(" get_functional_if_abs_mthd(" + if_type + ") num_params(" + num_params + ")");
+    LOG.debug(" get_functional_if_abs_mthd(" + if_type + ") num_params(" + num_params + ")");
 
     Debug.assertion(if_type.isFunctionalInterface(), "if_type should be functional interface, but " + if_type);
 
@@ -146,7 +150,7 @@ public class OpFunction extends OpObject {
 
     for (AbsFuncType func_type : func_list) {
 
-      Debug.println_dbg(" func_type:" + func_type + ":" + (func_type.is_abstract() ? "abstract" : "") + "("
+      LOG.debug(" func_type:" + func_type + ":" + (func_type.is_abstract() ? "abstract" : "") + "("
           + func_type.getFuncSignatureDesc() + ")");
 
       if (!func_type.is_abstract()) {
@@ -201,8 +205,8 @@ public class OpFunction extends OpObject {
     MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", constructor_sig, null, null);
     mv.visitCode();
 
-    Debug.println_info("ALOAD 0 for this");
-    Debug.println_info("INVOKESPECIAL java/lang/Object");
+    LOG.info("ALOAD 0 for this");
+    LOG.info("INVOKESPECIAL java/lang/Object");
 
     mv.visitVarInsn(Opcodes.ALOAD, 0); // this
     mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
@@ -240,12 +244,12 @@ public class OpFunction extends OpObject {
       local_var_idx += (para_type.op().getCategory());
     }
 
-    Debug.println_dbg("Method Handle Call : " + r_mh_type);
+    LOG.debug("Method Handle Call : " + r_mh_type);
 
     FuncSignatureDesc funcsig = r_mh_type.getFuncSignatureDesc();
     Debug.assertion(funcsig != null, "fucsig should be valid");
 
-    Debug.println_info("INVOKEVIRTUAL java/lang/invoke/MethodHandle/invoke");
+    LOG.info("INVOKEVIRTUAL java/lang/invoke/MethodHandle/invoke");
     mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/invoke/MethodHandle", "invoke", funcsig.getMthdDscStr(),
         false);
 
@@ -272,7 +276,7 @@ public class OpFunction extends OpObject {
 
     // write class file
     try {
-      Debug.println_dbg("Writing Class File(" + class_name + ")");
+      LOG.debug("Writing Class File(" + class_name + ")");
       cpLoader.writeClassFile(cw, class_name);
     } catch (Exception e) {
       // e.printStackTrace();

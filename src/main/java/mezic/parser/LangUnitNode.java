@@ -16,10 +16,14 @@ import mezic.compiler.type.AbsTypeList;
 import mezic.compiler.type.TContext;
 
 import org.objectweb.asm.Label;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LangUnitNode extends SimpleNode implements ParserTreeConstants {
 
   private static final long serialVersionUID = -2324904526672602403L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(LangUnitNode.class);
 
   public LangUnitNode() {
     super(0);
@@ -549,7 +553,7 @@ public class LangUnitNode extends SimpleNode implements ParserTreeConstants {
     if (!this.isNodeId(JJTACCESS) && !this.isNodeId(JJTSUBACCESS) && !this.isNodeId(JJTMAPACCESS)) {
       throw new CompileException("This Method is for Access Node");
     }
-    Debug.println_dbg("Set Assign Tgt" + this);
+    LOG.debug("Set Assign Tgt" + this);
     this.is_assign_tgt = is_assign_tgt;
   }
 

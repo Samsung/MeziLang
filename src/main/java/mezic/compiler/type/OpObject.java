@@ -9,10 +9,15 @@ import java.util.Objects;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpObject implements OpLvalue {
 
   private static final long serialVersionUID = -2536277020146509831L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpObject.class);
+
 
   transient protected CompilerLoader cpLoader = null;
 
@@ -67,13 +72,13 @@ public class OpObject implements OpLvalue {
       }
 
       if (lval.isSingleton()) {
-        Debug.println_info(
+        LOG.info(
             "PUTSTATIC " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         //// Compiled Instruction
         opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
         //// End
       } else {
-        Debug.println_info(
+        LOG.info(
             "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         //// Compiled Instruction
         opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
@@ -91,7 +96,7 @@ public class OpObject implements OpLvalue {
       lval.initializeType(rvalue.getType());
       lval.setAssigned(true);
       opinfo.mv.visitVarInsn(Opcodes.ASTORE, lval.getContextVarIdx());
-      Debug.println_info("ASTORE" + lval.getContextVarIdx());
+      LOG.info("ASTORE" + lval.getContextVarIdx());
     }
 
     return lval.getOpStackClone("anonymous");
@@ -384,7 +389,7 @@ public class OpObject implements OpLvalue {
       throw new CompileException(
           "member function " + op_str + "(" + rval_type.getMthdDscStr() + ") is not defined in " + lval_type);
     }
-    Debug.println_dbg("func_type:" + func_type);
+    LOG.debug("func_type:" + func_type);
 
     cpLoader.checkExceptionHandling(func_type, opinfo.top_context);
 
@@ -432,19 +437,19 @@ public class OpObject implements OpLvalue {
   @Override
   public void store(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.ASTORE, index);
-    Debug.println_info("ASTORE_" + index);
+    LOG.info("ASTORE_" + index);
   }
 
   @Override
   public void store_map_element(OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.AASTORE);
-    Debug.println_info("AASTORE");
+    LOG.info("AASTORE");
   }
 
   @Override
   public void load_funcstack_variable(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.ALOAD, index);
-    Debug.println_info("ALOAD_" + index);
+    LOG.info("ALOAD_" + index);
   }
 
   @Override
@@ -465,13 +470,13 @@ public class OpObject implements OpLvalue {
       // we cannot check whether member variable is assigned or not
       // Container owner_cont = var_cont.getOwnerContainer();
       Debug.assertion(owner_cont != null, "Owner Container should not be invalid");
-      Debug.println_dbg("Owner Container: " + owner_cont);
+      LOG.debug("Owner Container: " + owner_cont);
 
       AbsType owner_type = owner_cont.getType();
       AbsType var_type = var_cont.getType();
 
       if (var_cont.isSingleton()) {
-        Debug.println_dbg(owner_cont);
+        LOG.debug(owner_cont.toString());
         if (owner_cont.isForm(Container.FORM_OPSTACK_VAR)) {
           /*
            * This is for accessing singleton member variable access
@@ -479,16 +484,16 @@ public class OpObject implements OpLvalue {
            * ex) a.b.c.d.e ( e is singleton, or d is singleton, or c is
            * singleton ..)
            */
-          Debug.println_info("POP OPSTACK_VAR for GETSTATIC");
+          LOG.info("POP OPSTACK_VAR for GETSTATIC");
           // throw new InterpreterException("Stop");
           owner_cont.getType().op().pop(owner_cont, opinfo);
         }
 
-        Debug.println_info(
+        LOG.info(
             "GETSTATIC " + owner_type.getName() + ":" + var_cont.getName() + "(" + var_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.GETSTATIC, owner_type.getName(), var_cont.getName(), var_type.getMthdDscStr());
       } else {
-        Debug.println_info(
+        LOG.info(
             "GETFIELD " + owner_type.getName() + ":" + var_cont.getName() + "(" + var_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.GETFIELD, owner_type.getName(), var_cont.getName(), var_type.getMthdDscStr());
       }
@@ -515,11 +520,11 @@ public class OpObject implements OpLvalue {
   public void dup(Container lval, OpInfo opinfo) throws CompileException {
     switch (getCategory()) {
     case 1:
-      Debug.println_dbg("DUP");
+      LOG.debug("DUP");
       opinfo.mv.visitInsn(Opcodes.DUP);
       break;
     case 2:
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
       break;
     default:
@@ -531,11 +536,11 @@ public class OpObject implements OpLvalue {
   public void dup_x1(Container lval, OpInfo opinfo) throws CompileException {
     switch (getCategory()) {
     case 1:
-      Debug.println_dbg("DUP_X1");
+      LOG.debug("DUP_X1");
       opinfo.mv.visitInsn(Opcodes.DUP_X1);
       break;
     case 2:
-      Debug.println_dbg("DUP2_X1");
+      LOG.debug("DUP2_X1");
       opinfo.mv.visitInsn(Opcodes.DUP2_X1);
       break;
     default:
@@ -547,11 +552,11 @@ public class OpObject implements OpLvalue {
   public void dup_x2(Container lval, OpInfo opinfo) throws CompileException {
     switch (getCategory()) {
     case 1:
-      Debug.println_dbg("DUP_X2");
+      LOG.debug("DUP_X2");
       opinfo.mv.visitInsn(Opcodes.DUP_X2);
       break;
     case 2:
-      Debug.println_dbg("DUP2_X2");
+      LOG.debug("DUP2_X2");
       opinfo.mv.visitInsn(Opcodes.DUP2_X2);
       break;
     default:
@@ -563,11 +568,11 @@ public class OpObject implements OpLvalue {
   public void pop(Container lval, OpInfo opinfo) throws CompileException {
     switch (getCategory()) {
     case 1:
-      Debug.println_dbg("POP");
+      LOG.debug("POP");
       opinfo.mv.visitInsn(Opcodes.POP);
       break;
     case 2:
-      Debug.println_dbg("POP2");
+      LOG.debug("POP2");
       opinfo.mv.visitInsn(Opcodes.POP2);
       break;
     default:
@@ -578,17 +583,17 @@ public class OpObject implements OpLvalue {
   @Override
   public void return_variable(Container lval, OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.ARETURN);
-    Debug.println_info("ARETURN");
+    LOG.info("ARETURN");
   }
 
   @Override
   public void return_dummy_variable(OpInfo opinfo) throws CompileException {
 
-    Debug.println_info("ACONST_NULL");
+    LOG.info("ACONST_NULL");
     opinfo.mv.visitInsn(Opcodes.ACONST_NULL);
 
     opinfo.mv.visitInsn(Opcodes.ARETURN);
-    Debug.println_info("ARETURN");
+    LOG.info("ARETURN");
   }
 
   public AbsType get_return_type_of_single_op(int opcode, AbsType lval_type, TContext top_context)
@@ -671,7 +676,7 @@ public class OpObject implements OpLvalue {
   @Override
   public AbsType type_convert(Container rval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("java/lang/Object->java/lang/String");
+      LOG.info("java/lang/Object->java/lang/String");
 
       return string_type_convert(rval, opinfo);
     } else if (tgttype.isName(TPrimitiveClass.NAME_VOID)) { // for null
@@ -705,7 +710,7 @@ public class OpObject implements OpLvalue {
   @Override
   public void explicit_casting(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, lval.getType().getName());
-    Debug.println_info("CAST to " + lval.getType().getName());
+    LOG.info("CAST to " + lval.getType().getName());
   }
 
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import mezic.compiler.CompileException;
 import mezic.compiler.CompilerLoader;
 import mezic.compiler.Container;
-import mezic.compiler.Debug;
 import mezic.util.TypeUtil;
 
 import org.objectweb.asm.Opcodes;
@@ -15,10 +14,15 @@ import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TResolvedClass extends AbsType implements AbsClassType {
 
   private static final long serialVersionUID = -8463717196949481880L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(TResolvedClass.class);
+
 
   transient private CompilerLoader cpLoader = null;
 
@@ -174,8 +178,7 @@ public class TResolvedClass extends AbsType implements AbsClassType {
       if (name.equals(method.name)) {
         String tgt_paratype_dsc = TypeUtil.getArgTypeDsc(method.desc);
 
-        Debug
-            .println_dbg("getLocalFunctionPoly: method.desc[" + method.desc + "] paratype_list[" + paratype_list + "]");
+        LOG.debug("getLocalFunctionPoly: method.desc[" + method.desc + "] paratype_list[" + paratype_list + "]");
 
         if (tgt_paratype_dsc == null) {
           throw new CompileException(
@@ -241,7 +244,7 @@ public class TResolvedClass extends AbsType implements AbsClassType {
       method = methods.get(i);
       if (name.equals(method.name)) {
         String tgt_paratype_dsc = TypeUtil.getArgTypeDsc(method.desc);
-        Debug.println_dbg(
+        LOG.debug(
             "getLocalVarArgFunctionPoly: method.desc[" + method.desc + "] paratype_list[" + invoke_paratype_list + "]");
 
         if (tgt_paratype_dsc == null) {
@@ -296,7 +299,7 @@ public class TResolvedClass extends AbsType implements AbsClassType {
       if (name.equals(method.name)) {
         String tgt_paratype_dsc = TypeUtil.getArgTypeDsc(method.desc);
 
-        Debug.println_dbg(
+        LOG.debug(
             "getLocalApplyFunction: method.desc[" + method.desc + "] paratype_list[" + paratype_list + "]");
 
         if (tgt_paratype_dsc == null) {
@@ -369,7 +372,7 @@ public class TResolvedClass extends AbsType implements AbsClassType {
 
         AbsTypeList tgt_paratype_list = AbsTypeList.construct(tgt_arg_type_dsc, cpLoader);
 
-        // Debug.println_dbg("("+i+")
+        // LOG.debug("("+i+")
         // ["+method.name+"/"+method.desc+"]["+tgt_arg_type_dsc+"/"+tgt_paratype_list+"]
         // for ["+paratype_list+"]");
 

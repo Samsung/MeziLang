@@ -7,10 +7,15 @@ import mezic.compiler.Debug;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpShort extends OpObject {
 
   private static final long serialVersionUID = -321738517768153025L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpShort.class);
+
 
   public OpShort(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -31,7 +36,7 @@ public class OpShort extends OpObject {
     if (lval.getForm() == Container.FORM_FUNSTACK_VAR) {
       //// Compiled Instruction
       opinfo.mv.visitVarInsn(Opcodes.ISTORE, lval.getContextVarIdx());
-      Debug.println_info("ISTORE" + lval.getContextVarIdx());
+      LOG.info("ISTORE" + lval.getContextVarIdx());
       //// End
       lval.setAssigned(true);
     } else if (lval.getForm() == Container.FORM_OBJMEMBER_VAR) {
@@ -51,11 +56,11 @@ public class OpShort extends OpObject {
       }
 
       if (lval.isSingleton()) {
-        Debug.println_info(
+        LOG.info(
             "PUTSTATIC " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       } else {
-        Debug.println_info(
+        LOG.info(
             "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       }
@@ -66,7 +71,7 @@ public class OpShort extends OpObject {
       Debug.assertion(src_cont.isTypeInitialized(), "lval_owner should be type initialized");
       Debug.assertion(src_cont.getType() instanceof TMapType, "lval_owner type should be TMapType");
 
-      Debug.println_dbg("SASTORE");
+      LOG.debug("SASTORE");
       opinfo.mv.visitInsn(Opcodes.SASTORE);
     } else {
       throw new CompileException("Invalid lval form(" + lval + ")");
@@ -246,13 +251,13 @@ public class OpShort extends OpObject {
       default:
         //do nothing
       }
-      Debug.println_info("ICONST_" + int_val);
+      LOG.info("ICONST_" + int_val);
     } else if ((int_val >= 6 && int_val <= 127) || (int_val >= -128 && int_val <= -2)) {
       opinfo.mv.visitIntInsn(Opcodes.BIPUSH, int_val);
-      Debug.println_info("BIPUSH_" + int_val);
+      LOG.info("BIPUSH_" + int_val);
     } else if ((int_val >= 128 && int_val <= 32767) || (int_val >= -32768 && int_val <= -129)) {
       opinfo.mv.visitIntInsn(Opcodes.SIPUSH, int_val);
-      Debug.println_info("SIPUSH_" + int_val);
+      LOG.info("SIPUSH_" + int_val);
     } else {
       throw new CompileException("Out of Integer boundary(" + int_val + ")");
     }
@@ -261,35 +266,35 @@ public class OpShort extends OpObject {
   @Override
   public void store(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.ISTORE, index);
-    Debug.println_info("ISTORE_" + index);
+    LOG.info("ISTORE_" + index);
   }
 
   @Override
   public void store_map_element(OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.CASTORE);
-    Debug.println_info("CASTORE");
+    LOG.info("CASTORE");
   }
 
   @Override
   public void load_funcstack_variable(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.ILOAD, index);
-    Debug.println_info("ILOAD_" + index);
+    LOG.info("ILOAD_" + index);
   }
 
   @Override
   public void return_variable(Container lval, OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.IRETURN);
-    Debug.println_info("IRETURN");
+    LOG.info("IRETURN");
   }
 
   @Override
   public void return_dummy_variable(OpInfo opinfo) throws CompileException {
 
     opinfo.mv.visitInsn(Opcodes.ICONST_1);
-    Debug.println_info("ICONST_1 for " + this.getOpString());
+    LOG.info("ICONST_1 for " + this.getOpString());
 
     opinfo.mv.visitInsn(Opcodes.IRETURN);
-    Debug.println_info("IRETURN" + " for Boolean");
+    LOG.info("IRETURN" + " for Boolean");
   }
 
   @Override
@@ -335,13 +340,13 @@ public class OpShort extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/Short") || tgttype.isName("java/lang/Object")) {
-      Debug.println_info("CHANGE S->java/lang/Short");
+      LOG.info("CHANGE S->java/lang/Short");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/Short");
       return type;
     } else if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("CHANGE S->java/lang/String");
+      LOG.info("CHANGE S->java/lang/String");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Short", "toString", "(S)Ljava/lang/String;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/String");
@@ -356,7 +361,7 @@ public class OpShort extends OpObject {
     opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/Short");
     opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S", false);
 
-    Debug.println_info("CAST to S");
+    LOG.info("CAST to S");
   }
 
 }

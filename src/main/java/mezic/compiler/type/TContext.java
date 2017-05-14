@@ -2,6 +2,9 @@ package mezic.compiler.type;
 
 import java.util.LinkedList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mezic.compiler.CompileException;
 import mezic.compiler.CompilerLoader;
 import mezic.compiler.Container;
@@ -11,6 +14,9 @@ import mezic.parser.LangUnitNode;
 public class TContext extends AbsType {
 
   private static final long serialVersionUID = -6593051900415279360L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(TContext.class);
+
 
   public static final String CLOSURE_PREFIX = "_Closure_";
   public static final String FUNC_IF_IMPL_PREFIX = "_FuncIfImpl_";
@@ -63,7 +69,7 @@ public class TContext extends AbsType {
     this.next_child_var_idx = idx;
     this.last_child_var_idx = -1;
 
-    Debug.println_dbg("initChildVarIdx: idx=" + idx);
+    LOG.debug("initChildVarIdx: idx=" + idx);
   }
 
   public int allocChildVarIdx(int offset) {
@@ -96,7 +102,7 @@ public class TContext extends AbsType {
   }
 
   public void updateOwnerType(AbsType owner) {
-    Debug.println_dbg("Owner Type is updated with " + owner);
+    LOG.debug("Owner Type is updated with " + owner);
     this.owner_type = owner;
   }
 
@@ -175,7 +181,7 @@ public class TContext extends AbsType {
       throw new CompileException("Registering variable is null");
     }
 
-    Debug.println_dbg("New Container(" + cont + ") is registered");
+    LOG.debug("New Container(" + cont + ") is registered");
   }
 
   public Container getChildVariable(String name) throws CompileException {
@@ -361,8 +367,8 @@ public class TContext extends AbsType {
       case AbsType.FORM_FUNC:
         TContextFunc func_ctx = (TContextFunc) ctx;
         AbsTypeList excptype_list = func_ctx.getThrowsList();
-        Debug.println_dbg("func_ctx=" + func_ctx);
-        Debug.println_dbg("excptype_list=" + excptype_list);
+        LOG.debug("func_ctx=" + func_ctx);
+        LOG.debug("excptype_list=" + excptype_list);
         if (excptype_list != null) {
           return excptype_list.has(excp_type);
         } else {

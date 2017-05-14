@@ -3,7 +3,6 @@ package mezic.compiler.type;
 import mezic.compiler.CompileException;
 import mezic.compiler.CompilerLoader;
 import mezic.compiler.Container;
-import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;

@@ -6,10 +6,14 @@ import mezic.compiler.Container;
 import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpObjectArray extends OpObject {
 
   private static final long serialVersionUID = -7568242921822615219L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpObjectArray.class);
 
   public OpObjectArray(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -30,35 +34,35 @@ public class OpObjectArray extends OpObject {
     Debug.assertion(map_ele_type != null, "map_type should be initialized");
 
     if (map_ele_type.isName(TPrimitiveClass.NAME_INT)) {
-      Debug.println_info("NEWARRAY T_INT");
+      LOG.info("NEWARRAY T_INT");
       opinfo.mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_INT);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_CHAR)) {
-      Debug.println_info("NEWARRAY T_CHAR");
+      LOG.info("NEWARRAY T_CHAR");
       opinfo.mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_CHAR);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_SHORT)) {
-      Debug.println_info("NEWARRAY T_SHORT");
+      LOG.info("NEWARRAY T_SHORT");
       opinfo.mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_SHORT);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_BYTE)) {
-      Debug.println_info("NEWARRAY T_BYTE");
+      LOG.info("NEWARRAY T_BYTE");
       opinfo.mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_BYTE);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_BOOL)) {
-      Debug.println_info("NEWARRAY T_BOOLEAN");
+      LOG.info("NEWARRAY T_BOOLEAN");
       opinfo.mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_BOOLEAN);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_LONG)) {
-      Debug.println_info("NEWARRAY T_LONG");
+      LOG.info("NEWARRAY T_LONG");
       opinfo.mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_LONG);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_FLOAT)) {
-      Debug.println_info("NEWARRAY T_FLOAT");
+      LOG.info("NEWARRAY T_FLOAT");
       opinfo.mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_FLOAT);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_DOUBLE)) {
-      Debug.println_info("NEWARRAY T_DOUBLE");
+      LOG.info("NEWARRAY T_DOUBLE");
       opinfo.mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_DOUBLE);
     } else {
       if (map_ele_type instanceof TMapType) {
-        Debug.println_info("Opcodes.ANEWARRAY " + map_ele_type.getMthdDscStr());
+        LOG.info("Opcodes.ANEWARRAY " + map_ele_type.getMthdDscStr());
         opinfo.mv.visitTypeInsn(Opcodes.ANEWARRAY, map_ele_type.getMthdDscStr());
       } else {
-        Debug.println_info("Opcodes.ANEWARRAY " + map_ele_type.getName());
+        LOG.info("Opcodes.ANEWARRAY " + map_ele_type.getName());
         opinfo.mv.visitTypeInsn(Opcodes.ANEWARRAY, map_ele_type.getName());
       }
     }
@@ -80,31 +84,31 @@ public class OpObjectArray extends OpObject {
     Debug.assertion(map_ele_type != null, "map_type should be initialized");
 
     if (map_ele_type.isName(TPrimitiveClass.NAME_INT)) {
-      Debug.println_info("IALOAD");
+      LOG.info("IALOAD");
       opinfo.mv.visitInsn(Opcodes.IALOAD);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_BOOL)) {
-      Debug.println_info("BALOAD");
+      LOG.info("BALOAD");
       opinfo.mv.visitInsn(Opcodes.BALOAD);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_CHAR)) {
-      Debug.println_info("CALOAD");
+      LOG.info("CALOAD");
       opinfo.mv.visitInsn(Opcodes.CALOAD);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_SHORT)) {
-      Debug.println_info("SALOAD");
+      LOG.info("SALOAD");
       opinfo.mv.visitInsn(Opcodes.SALOAD);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_BYTE)) {
-      Debug.println_info("BALOAD");
+      LOG.info("BALOAD");
       opinfo.mv.visitInsn(Opcodes.BALOAD);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_LONG)) {
-      Debug.println_info("LALOAD");
+      LOG.info("LALOAD");
       opinfo.mv.visitInsn(Opcodes.LALOAD);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_FLOAT)) {
-      Debug.println_info("FALOAD");
+      LOG.info("FALOAD");
       opinfo.mv.visitInsn(Opcodes.FALOAD);
     } else if (map_ele_type.isName(TPrimitiveClass.NAME_DOUBLE)) {
-      Debug.println_info("DALOAD");
+      LOG.info("DALOAD");
       opinfo.mv.visitInsn(Opcodes.DALOAD);
     } else {
-      Debug.println_info("AALOAD");
+      LOG.info("AALOAD");
       opinfo.mv.visitInsn(Opcodes.AALOAD);
     }
 
@@ -158,7 +162,7 @@ public class OpObjectArray extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("Array ->java/lang/String");
+      LOG.info("Array ->java/lang/String");
       return string_type_convert(lval, opinfo);
     } else {
       throw new CompileException("Not Supported target type");

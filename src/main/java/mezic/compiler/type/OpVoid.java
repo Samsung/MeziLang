@@ -8,11 +8,15 @@ import mezic.compiler.Debug;
 import java.util.Objects;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //public class OpVoid implements OpLvalue  {
 public class OpVoid extends OpObject {
 
   private static final long serialVersionUID = -6926163662376121398L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpVoid.class);
 
   /*
    * transient protected CompilerLoader cpLoader = null; public
@@ -253,7 +257,7 @@ public class OpVoid extends OpObject {
     }
 
     if (lval.getContainerObject() instanceof ObjNull) {
-      Debug.println_info("ACONST_NULL");
+      LOG.info("ACONST_NULL");
       opinfo.mv.visitInsn(Opcodes.ACONST_NULL);
     } else {
       throw new CompileException("'load constant' lvalue op is not supported for " + toString());
@@ -317,7 +321,7 @@ public class OpVoid extends OpObject {
   @Override
   public void return_variable(Container lval, OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.RETURN);
-    Debug.println_info("RETURN" + "(no return value) for Void");
+    LOG.info("RETURN" + "(no return value) for Void");
   }
 
   @Override

@@ -7,10 +7,15 @@ import mezic.compiler.Debug;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpLong extends OpObject {
 
   private static final long serialVersionUID = -6960343608612920119L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpLong.class);
+
 
   public OpLong(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -37,7 +42,7 @@ public class OpLong extends OpObject {
     if (lval.getForm() == Container.FORM_FUNSTACK_VAR) {
       //// Compiled Instruction
       opinfo.mv.visitVarInsn(Opcodes.LSTORE, lval.getContextVarIdx());
-      Debug.println_info("LSTORE" + lval.getContextVarIdx());
+      LOG.info("LSTORE" + lval.getContextVarIdx());
       //// End
       lval.setAssigned(true);
     } else if (lval.getForm() == Container.FORM_OBJMEMBER_VAR) {
@@ -57,11 +62,11 @@ public class OpLong extends OpObject {
       }
 
       if (lval.isSingleton()) {
-        Debug.println_info(
+        LOG.info(
             "PUTSTATIC " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       } else {
-        Debug.println_info(
+        LOG.info(
             "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
         opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
       }
@@ -91,7 +96,7 @@ public class OpLong extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("LADD");
+    LOG.info("LADD");
     opinfo.mv.visitInsn(Opcodes.LADD);
     // added result will be on the operand stack
     //// End
@@ -105,7 +110,7 @@ public class OpLong extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("LSUB");
+    LOG.info("LSUB");
     opinfo.mv.visitInsn(Opcodes.LSUB);
     // subed result will be on the operand stack
     //// End
@@ -119,7 +124,7 @@ public class OpLong extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("LMUL");
+    LOG.info("LMUL");
     opinfo.mv.visitInsn(Opcodes.LMUL);
     // subed result will be on the operand stack
     //// End
@@ -133,7 +138,7 @@ public class OpLong extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("LDIV");
+    LOG.info("LDIV");
     opinfo.mv.visitInsn(Opcodes.LDIV);
     // subed result will be on the operand stack
     //// End
@@ -147,7 +152,7 @@ public class OpLong extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("LREM");
+    LOG.info("LREM");
     opinfo.mv.visitInsn(Opcodes.LREM);
     // subed result will be on the operand stack
     //// End
@@ -289,7 +294,7 @@ public class OpLong extends OpObject {
   public Container and(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LAND");
+    LOG.info("LAND");
     opinfo.mv.visitInsn(Opcodes.LAND);
     // subed result will be on the operand stack
     //// End
@@ -300,7 +305,7 @@ public class OpLong extends OpObject {
   public Container exc_or(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LXOR");
+    LOG.info("LXOR");
     opinfo.mv.visitInsn(Opcodes.LXOR);
     // subed result will be on the operand stack
     //// End
@@ -311,7 +316,7 @@ public class OpLong extends OpObject {
   public Container inc_or(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LOR");
+    LOG.info("LOR");
     opinfo.mv.visitInsn(Opcodes.LOR);
     // subed result will be on the operand stack
     //// End
@@ -336,7 +341,7 @@ public class OpLong extends OpObject {
   public Container shfit_left(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LSHL");
+    LOG.info("LSHL");
     opinfo.mv.visitInsn(Opcodes.LSHL);
     // subed result will be on the operand stack
     //// End
@@ -347,7 +352,7 @@ public class OpLong extends OpObject {
   public Container shfit_right(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LSHR");
+    LOG.info("LSHR");
     opinfo.mv.visitInsn(Opcodes.LSHR);
     // subed result will be on the operand stack
     //// End
@@ -361,10 +366,10 @@ public class OpLong extends OpObject {
 
     //// Compiled Instruction
     long long_val = -1;
-    Debug.println_info("LDC_" + long_val);
+    LOG.info("LDC_" + long_val);
     opinfo.mv.visitLdcInsn(long_val);
 
-    Debug.println_info("LMUL");
+    LOG.info("LMUL");
     opinfo.mv.visitInsn(Opcodes.LMUL);
     // subed result will be on the operand stack
     //// End
@@ -386,10 +391,10 @@ public class OpLong extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
     long long_val = -1;
-    Debug.println_info("LDC_" + long_val);
+    LOG.info("LDC_" + long_val);
     opinfo.mv.visitLdcInsn(long_val);
 
-    Debug.println_info("LXOR");
+    LOG.info("LXOR");
     opinfo.mv.visitInsn(Opcodes.LXOR);
     // subed result will be on the operand stack
     //// End
@@ -400,7 +405,7 @@ public class OpLong extends OpObject {
   public Container multiply_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LMUL");
+    LOG.info("LMUL");
     opinfo.mv.visitInsn(Opcodes.LMUL);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -413,7 +418,7 @@ public class OpLong extends OpObject {
   public Container division_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LDIV");
+    LOG.info("LDIV");
     opinfo.mv.visitInsn(Opcodes.LDIV);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -426,7 +431,7 @@ public class OpLong extends OpObject {
   public Container rest_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LREM");
+    LOG.info("LREM");
     opinfo.mv.visitInsn(Opcodes.LREM);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -440,7 +445,7 @@ public class OpLong extends OpObject {
     Container anonyInt = lval.getOpStackClone("anonymous");
 
     //// Compiled Instruction
-    Debug.println_info("LADD");
+    LOG.info("LADD");
     opinfo.mv.visitInsn(Opcodes.LADD);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -452,7 +457,7 @@ public class OpLong extends OpObject {
   public Container minus_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LSUB");
+    LOG.info("LSUB");
     opinfo.mv.visitInsn(Opcodes.LSUB);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -465,7 +470,7 @@ public class OpLong extends OpObject {
   public Container shift_left_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LSHL");
+    LOG.info("LSHL");
     opinfo.mv.visitInsn(Opcodes.LSHL);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -478,7 +483,7 @@ public class OpLong extends OpObject {
   public Container shift_right_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LSHR");
+    LOG.info("LSHR");
     opinfo.mv.visitInsn(Opcodes.LSHR);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -491,7 +496,7 @@ public class OpLong extends OpObject {
   public Container and_assign_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LAND");
+    LOG.info("LAND");
     opinfo.mv.visitInsn(Opcodes.LAND);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -504,7 +509,7 @@ public class OpLong extends OpObject {
   public Container exclusive_or_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LXOR");
+    LOG.info("LXOR");
     opinfo.mv.visitInsn(Opcodes.LXOR);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -517,7 +522,7 @@ public class OpLong extends OpObject {
   public Container inclusive_or_assign(Container lval, Container rvalue, OpInfo opinfo) throws CompileException {
     Container anonyInt = lval.getOpStackClone("anonymous");
     //// Compiled Instruction
-    Debug.println_info("LOR");
+    LOG.info("LOR");
     opinfo.mv.visitInsn(Opcodes.LOR);
 
     do_assign_common(lval, anonyInt, opinfo);
@@ -556,30 +561,30 @@ public class OpLong extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("LCONST_1");
+          LOG.info("LCONST_1");
           opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-          Debug.println_info("LADD");
+          LOG.info("LADD");
           opinfo.mv.visitInsn(Opcodes.LADD);
 
-          Debug.println_info("DUP2");
+          LOG.info("DUP2");
           opinfo.mv.visitInsn(Opcodes.DUP2);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("LCONST_1");
+          LOG.info("LCONST_1");
           opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-          Debug.println_info("LADD");
+          LOG.info("LADD");
           opinfo.mv.visitInsn(Opcodes.LADD);
 
-          Debug.println_info("DUP2_X1");
+          LOG.info("DUP2_X1");
           opinfo.mv.visitInsn(Opcodes.DUP2_X1);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -589,16 +594,16 @@ public class OpLong extends OpObject {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
 
         //// Compiled Instruction
-        Debug.println_info("LCONST_1");
+        LOG.info("LCONST_1");
         opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-        Debug.println_info("LADD");
+        LOG.info("LADD");
         opinfo.mv.visitInsn(Opcodes.LADD);
 
-        Debug.println_info("LSTORE_" + lval.getContextVarIdx());
+        LOG.info("LSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.LSTORE, lval.getContextVarIdx());
 
-        Debug.println_info("LLOAD_" + lval.getContextVarIdx());
+        LOG.info("LLOAD_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.LLOAD, lval.getContextVarIdx());
         //// End
       }
@@ -606,19 +611,19 @@ public class OpLong extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("LALOAD");
+      LOG.debug("LALOAD");
       opinfo.mv.visitInsn(Opcodes.LALOAD);
 
-      Debug.println_info("LCONST_1");
+      LOG.info("LCONST_1");
       opinfo.mv.visitInsn(Opcodes.LCONST_1);
-      Debug.println_info("LADD");
+      LOG.info("LADD");
       opinfo.mv.visitInsn(Opcodes.LADD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_dbg("LASTORE");
+      LOG.debug("LASTORE");
       opinfo.mv.visitInsn(Opcodes.LASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -657,30 +662,30 @@ public class OpLong extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("LCONST_1");
+          LOG.info("LCONST_1");
           opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-          Debug.println_info("LSUB");
+          LOG.info("LSUB");
           opinfo.mv.visitInsn(Opcodes.LSUB);
 
-          Debug.println_info("DUP2");
+          LOG.info("DUP2");
           opinfo.mv.visitInsn(Opcodes.DUP2);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("LCONST_1");
+          LOG.info("LCONST_1");
           opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-          Debug.println_info("LSUB");
+          LOG.info("LSUB");
           opinfo.mv.visitInsn(Opcodes.LSUB);
 
-          Debug.println_info("DUP2_X1");
+          LOG.info("DUP2_X1");
           opinfo.mv.visitInsn(Opcodes.DUP2_X1);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -690,16 +695,16 @@ public class OpLong extends OpObject {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
 
         //// Compiled Instruction
-        Debug.println_info("LCONST_1");
+        LOG.info("LCONST_1");
         opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-        Debug.println_info("LSUB");
+        LOG.info("LSUB");
         opinfo.mv.visitInsn(Opcodes.LSUB);
 
-        Debug.println_info("LSTORE_" + lval.getContextVarIdx());
+        LOG.info("LSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.LSTORE, lval.getContextVarIdx());
 
-        Debug.println_info("LLOAD_" + lval.getContextVarIdx());
+        LOG.info("LLOAD_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.LLOAD, lval.getContextVarIdx());
         //// End
       }
@@ -707,19 +712,19 @@ public class OpLong extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("LALOAD");
+      LOG.debug("LALOAD");
       opinfo.mv.visitInsn(Opcodes.LALOAD);
 
-      Debug.println_info("LCONST_1");
+      LOG.info("LCONST_1");
       opinfo.mv.visitInsn(Opcodes.LCONST_1);
-      Debug.println_info("LSUB");
+      LOG.info("LSUB");
       opinfo.mv.visitInsn(Opcodes.LSUB);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_dbg("LASTORE");
+      LOG.debug("LASTORE");
       opinfo.mv.visitInsn(Opcodes.LASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -757,24 +762,24 @@ public class OpLong extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("LCONST_1");
+          LOG.info("LCONST_1");
           opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-          Debug.println_info("LADD");
+          LOG.info("LADD");
           opinfo.mv.visitInsn(Opcodes.LADD);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("LCONST_1");
+          LOG.info("LCONST_1");
           opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-          Debug.println_info("LADD");
+          LOG.info("LADD");
           opinfo.mv.visitInsn(Opcodes.LADD);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -784,16 +789,16 @@ public class OpLong extends OpObject {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
 
         //// Compiled Instruction
-        Debug.println_info("DUP2");
+        LOG.info("DUP2");
         opinfo.mv.visitInsn(Opcodes.DUP2);
 
-        Debug.println_info("LCONST_1");
+        LOG.info("LCONST_1");
         opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-        Debug.println_info("LADD");
+        LOG.info("LADD");
         opinfo.mv.visitInsn(Opcodes.LADD);
 
-        Debug.println_info("LSTORE_" + lval.getContextVarIdx());
+        LOG.info("LSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.LSTORE, lval.getContextVarIdx());
         //// End
       }
@@ -801,18 +806,18 @@ public class OpLong extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("LALOAD");
+      LOG.debug("LALOAD");
       opinfo.mv.visitInsn(Opcodes.LALOAD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_info("LCONST_1");
+      LOG.info("LCONST_1");
       opinfo.mv.visitInsn(Opcodes.LCONST_1);
-      Debug.println_info("LADD");
+      LOG.info("LADD");
       opinfo.mv.visitInsn(Opcodes.LADD);
-      Debug.println_dbg("LASTORE");
+      LOG.debug("LASTORE");
       opinfo.mv.visitInsn(Opcodes.LASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -850,24 +855,24 @@ public class OpLong extends OpObject {
         }
 
         if (org_cont.isSingleton()) {
-          Debug.println_info("LCONST_1");
+          LOG.info("LCONST_1");
           opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-          Debug.println_info("LSUB");
+          LOG.info("LSUB");
           opinfo.mv.visitInsn(Opcodes.LSUB);
 
-          Debug.println_info(
+          LOG.info(
               "PUTSTATIC " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTSTATIC, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
         } else {
-          Debug.println_info("LCONST_1");
+          LOG.info("LCONST_1");
           opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-          Debug.println_info("LSUB");
+          LOG.info("LSUB");
           opinfo.mv.visitInsn(Opcodes.LSUB);
 
-          Debug.println_info(
+          LOG.info(
               "PUTFIELD " + src_type.getName() + ":" + org_cont.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
           opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), org_cont.getName(),
               sub_ref_type.getMthdDscStr());
@@ -877,16 +882,16 @@ public class OpLong extends OpObject {
         Debug.assertion(org_cont.isAssigned(), "org_cont should be assigned status");
 
         //// Compiled Instruction
-        Debug.println_info("DUP2");
+        LOG.info("DUP2");
         opinfo.mv.visitInsn(Opcodes.DUP2);
 
-        Debug.println_info("LCONST_1");
+        LOG.info("LCONST_1");
         opinfo.mv.visitInsn(Opcodes.LCONST_1);
 
-        Debug.println_info("LSUB");
+        LOG.info("LSUB");
         opinfo.mv.visitInsn(Opcodes.LSUB);
 
-        Debug.println_info("LSTORE_" + lval.getContextVarIdx());
+        LOG.info("LSTORE_" + lval.getContextVarIdx());
         opinfo.mv.visitVarInsn(Opcodes.LSTORE, lval.getContextVarIdx());
         //// End
       }
@@ -894,18 +899,18 @@ public class OpLong extends OpObject {
       // ISSUE : is this correct ?
       return org_cont.getOpStackClone("anonymous");
     } else if (lval.isForm(Container.FORM_MAPELEMENT_VAR)) {
-      Debug.println_dbg("DUP2");
+      LOG.debug("DUP2");
       opinfo.mv.visitInsn(Opcodes.DUP2);
-      Debug.println_dbg("LALOAD");
+      LOG.debug("LALOAD");
       opinfo.mv.visitInsn(Opcodes.LALOAD);
 
       dup_x2(lval, opinfo);
 
-      Debug.println_info("LCONST_1");
+      LOG.info("LCONST_1");
       opinfo.mv.visitInsn(Opcodes.LCONST_1);
-      Debug.println_info("LSUB");
+      LOG.info("LSUB");
       opinfo.mv.visitInsn(Opcodes.LSUB);
-      Debug.println_dbg("LASTORE");
+      LOG.debug("LASTORE");
       opinfo.mv.visitInsn(Opcodes.LASTORE);
 
       return lval.getOpStackClone("anonymous");
@@ -925,14 +930,14 @@ public class OpLong extends OpObject {
 
     if (long_val == 0) {
       opinfo.mv.visitInsn(Opcodes.LCONST_0);
-      Debug.println_info("LCONST_" + long_val);
+      LOG.info("LCONST_" + long_val);
     } else if (long_val == 1) {
       opinfo.mv.visitInsn(Opcodes.LCONST_1);
-      Debug.println_info("LCONST_" + long_val);
+      LOG.info("LCONST_" + long_val);
     } else if ((long_val >= 2 && long_val <= 9223372036854775807L)
         || (long_val >= -9223372036854775808L && long_val <= -1)) {
       opinfo.mv.visitLdcInsn(long_val);
-      Debug.println_info("LDC_" + long_val);
+      LOG.info("LDC_" + long_val);
     } else {
       throw new CompileException("Out of Integer boundary(" + long_val + ")");
     }
@@ -940,25 +945,25 @@ public class OpLong extends OpObject {
 
   @Override
   public void store(Container lval, OpInfo opinfo, int index) throws CompileException {
-    Debug.println_info("LSTORE_" + index);
+    LOG.info("LSTORE_" + index);
     opinfo.mv.visitVarInsn(Opcodes.LSTORE, index);
   }
 
   @Override
   public void store_map_element(OpInfo opinfo) throws CompileException {
     opinfo.mv.visitInsn(Opcodes.LASTORE);
-    Debug.println_info("LASTORE");
+    LOG.info("LASTORE");
   }
 
   @Override
   public void load_funcstack_variable(Container lval, OpInfo opinfo, int index) throws CompileException {
-    Debug.println_info("LLOAD_" + index);
+    LOG.info("LLOAD_" + index);
     opinfo.mv.visitVarInsn(Opcodes.LLOAD, index);
   }
 
   @Override
   public void return_variable(Container lval, OpInfo opinfo) throws CompileException {
-    Debug.println_info("LRETURN");
+    LOG.info("LRETURN");
     opinfo.mv.visitInsn(Opcodes.LRETURN);
   }
 
@@ -966,10 +971,10 @@ public class OpLong extends OpObject {
   public void return_dummy_variable(OpInfo opinfo) throws CompileException {
 
     opinfo.mv.visitInsn(Opcodes.LCONST_1);
-    Debug.println_info("LCONST_1 for Long");
+    LOG.info("LCONST_1 for Long");
 
     opinfo.mv.visitInsn(Opcodes.LRETURN);
-    Debug.println_info("LRETURN" + " for Long");
+    LOG.info("LRETURN" + " for Long");
   }
 
   @Override
@@ -1006,13 +1011,13 @@ public class OpLong extends OpObject {
   @Override
   public AbsType type_convert(Container lval, AbsType tgttype, OpInfo opinfo) throws CompileException {
     if (tgttype.isName("java/lang/Long") || tgttype.isName("java/lang/Object")) {
-      Debug.println_info("CHANGE J->java/lang/Long");
+      LOG.info("CHANGE J->java/lang/Long");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/Long");
       return type;
     } else if (tgttype.isName("java/lang/String")) {
-      Debug.println_info("CHANGE J->java/lang/String");
+      LOG.info("CHANGE J->java/lang/String");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Long", "toString", "(J)Ljava/lang/String;", false);
 
       AbsType type = (AbsType) cpLoader.findClassFull("java/lang/String");
@@ -1031,11 +1036,11 @@ public class OpLong extends OpObject {
     AbsType src_type = src_cont.getType();
 
     if (src_type.isName("java/lang/Object")) {
-      Debug.println_info("CAST to J");
+      LOG.info("CAST to J");
       opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/Long");
       opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J", false);
     } else if (src_type.isName(TPrimitiveClass.NAME_INT)) {
-      Debug.println_info("CAST to J");
+      LOG.info("CAST to J");
       opinfo.mv.visitInsn(Opcodes.I2L);
     } else {
       throw new CompileException("Not Supported cast src type(" + src_type + ")");

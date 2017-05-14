@@ -6,10 +6,14 @@ import mezic.compiler.Container;
 import mezic.compiler.Debug;
 
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpString extends OpObject {
 
   private static final long serialVersionUID = -6605954588620972340L;
+  
+  private static final Logger LOG = LoggerFactory.getLogger(OpString.class);
 
   public OpString(CompilerLoader cpLoader) {
     super(cpLoader);
@@ -43,7 +47,7 @@ public class OpString extends OpObject {
         throw new CompileException("Invalid Sub Ref Container Type");
       }
 
-      Debug.println_info(
+      LOG.info(
           "PUTFIELD " + src_type.getName() + ":" + lval.getName() + "(" + sub_ref_type.getMthdDscStr() + ")");
       //// Compiled Instruction
       opinfo.mv.visitFieldInsn(Opcodes.PUTFIELD, src_type.getName(), lval.getName(), sub_ref_type.getMthdDscStr());
@@ -59,7 +63,7 @@ public class OpString extends OpObject {
     } else {
       //// Compiled Instruction
       opinfo.mv.visitVarInsn(Opcodes.ASTORE, lval.getContextVarIdx());
-      Debug.println_info("ASTORE" + lval.getContextVarIdx());
+      LOG.info("ASTORE" + lval.getContextVarIdx());
       //// End
       lval.setAssigned(true);
     }
@@ -75,7 +79,7 @@ public class OpString extends OpObject {
     //// Compiled Instruction
     opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "concat",
         "(Ljava/lang/String;)Ljava/lang/String;", false);
-    Debug.println_info("INVOKEVIRTUAL: String concat");
+    LOG.info("INVOKEVIRTUAL: String concat");
     // added result will be on the operand stack
     //// End
 
@@ -89,7 +93,7 @@ public class OpString extends OpObject {
     //// Compiled Instruction
     opinfo.mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "concat",
         "(Ljava/lang/String;)Ljava/lang/String;", false);
-    Debug.println_info("INVOKEVIRTUAL: String concat");
+    LOG.info("INVOKEVIRTUAL: String concat");
 
     do_assign_common(lval, anonyInt, opinfo);
     //// End
@@ -116,13 +120,13 @@ public class OpString extends OpObject {
   @Override
   public void store(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.ASTORE, index);
-    Debug.println_info("ASTORE_" + index);
+    LOG.info("ASTORE_" + index);
   }
 
   @Override
   public void load_funcstack_variable(Container lval, OpInfo opinfo, int index) throws CompileException {
     opinfo.mv.visitVarInsn(Opcodes.ALOAD, index);
-    Debug.println_info("ALOAD_" + index);
+    LOG.info("ALOAD_" + index);
   }
 
 }

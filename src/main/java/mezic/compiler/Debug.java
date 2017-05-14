@@ -13,54 +13,6 @@ public class Debug {
     enable_print_info = is_enable;
   }
 
-  public static void print_dbg(Object msg) {
-    if (enable_print_dbg) {
-      System.out.print(msg);
-    }
-  }
-
-  public static void println_dbg(Object msg) {
-    print_dbg(msg + "\n");
-  }
-
-  public static void println_dbg() {
-    print_dbg("\n");
-  }
-
-  public static void print_dbg(Object caller, Object msg) {
-    if (enable_print_dbg) {
-      System.out.print(msg);
-    }
-  }
-
-  public static void println_dbg(Object caller, Object msg) {
-    print_dbg(caller, msg + "\n");
-  }
-
-  public static void print_info(Object msg) {
-    if (enable_print_info) {
-      System.out.print(msg);
-    }
-  }
-
-  public static void println_info(Object msg) {
-    print_info(msg + "\n");
-  }
-
-  public static void println_info() {
-    print_info("\n");
-  }
-
-  public static void print_info(Object caller, Object msg) {
-    if (enable_print_info) {
-      System.out.print(msg);
-    }
-  }
-
-  public static void println_info(Object caller, Object msg) {
-    print_info(caller, msg + "\n");
-  }
-
   public static boolean enable_compile_debug_print = false;
 
   public static void stop() throws CompileException {
