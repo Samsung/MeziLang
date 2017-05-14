@@ -14,6 +14,13 @@ Mezi is interested in the followings.
 ## Getting Started
 [Building Mezi compiler & Helloworld example](BUILD.md)
 
+## Example Mezi code
+
+1. [Simple grammar examples](https://github.com/Samsung/MeziLang/tree/master/code_base/example)
+
+2. [Simple algorithm implementation examples](https://github.com/Samsung/MeziLang/tree/master/code_base/aps) 
+
+
 ## Contributing
 The project can only accept contributions which are licensed under the [Apache License 2.0](LICENSE) and are signed according to the Mezi languagge [Developer's Certificate of Origin](DCO.md). For further information please see our [Contribution Guidelines](CONTRIBUTING.md).
 
