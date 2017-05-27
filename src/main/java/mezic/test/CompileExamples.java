@@ -35,6 +35,8 @@ public class CompileExamples {
       runner.compile(new String[] {
     		  "example.e000_helloworld",
     		  "example.e001_plus_function",
+          "example.e0011_cum_function",
+          "example.e0012_function_name",
     		  "example.e002_closure_function",
     		  "example.e003_comparation_expr",
     		  "example.e004_array",
@@ -46,9 +48,12 @@ public class CompileExamples {
     		  "example.e010_operator_overload",
               });
 
+      ///*
       PathUtil.executeMain(new String[] {
     		  "example.Hello",
     		  "example.PlusFunction",
+          "example.CummulateFunction",
+          "example.FunctionName",
     		  "example.Closure",
     		  "example.Compare",
     		  "example.Array",
@@ -59,7 +64,10 @@ public class CompileExamples {
     		  "example.ExampleCurrying",
     		  "example.ExOperatorOverload",
               });
+     //*/
+     //PathUtil.executeMain(new String[] { "example.FunctionName" });
 
+      
     } catch (CompileException | ParseException e) {
       e.printStackTrace();
     } catch (Exception e) {

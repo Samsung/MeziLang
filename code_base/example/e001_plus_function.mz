@@ -1,75 +1,63 @@
 
-/*
-class PlusFunction
-{
-	static fn plus(a:int, b:int) {
+class PlusFunction {
+
+	fn plus1(a:int, b:int)->int {
 		return a + b
 	}
 
-	static fn main( args : String[] ){
-	
-		c:int = plus( 1, 2)
+	fn plus2(a:int, b:int) {
+		return a + b
+	}
+
+    fn plus3(a:int, b:int)->int := a + b
+
+    fn plus4(a:int, b:int)->int
+    := a + b
+
+    fn plus5(a:int, b:int)->int := 
+      a + b
+
+    fn plus6(a:int, b:int) := a + b
+
+    fn plus7(a:int, b:int)
+    := a + b
+
+    fn plus8(a:int, b:int):= 
+    a + b
+
+	static fn main(args:String[]) {
+		
+		obj = PlusFunction()
+		
+		c = obj.plus1(1, 2)
 		System.out.println("c="+c)
-	}
-	
-}
-*/
-
-/*
-class PlusFunction
-{
-	static fn plus(a:int, b:int)->int := a + b
-
-	static fn main( args : String[] ){
-	
-		c:int = plus( 1, 2)
+		
+		c = obj.plus2(1, 2)
 		System.out.println("c="+c)
+		
+		c = obj.plus3(1, 2)
+		System.out.println("c="+c)
+		
+		c = obj.plus4(1, 2)
+		System.out.println("c="+c)
+
+		c = obj.plus5(1, 2)
+		System.out.println("c="+c)
+		
+	    c = obj.plus6(1, 2)
+		System.out.println("c="+c)
+
+	    c = obj.plus7(1, 2)
+		System.out.println("c="+c)
+
+	    c = obj.plus8(1, 2)
+		System.out.println("c="+c)
+		
 	}
-	
+
 }
-*/
 
-/*
-class PlusFunction
-{
-	static fn sum_until( max:int) {
-		sum = 0
-		for( i = 0 ; i < max ; i++ ){  sum += i }
-		return sum
-	}
 
-	static fn main( args : String[] ) {
-		sum = sum_until( 1000 )
-		System.out.println("sum="+sum)
-	}
-}
-*/
-
-/*
-class PlusFunction
-{
-	static fn print( str:String ) {
-		System.out.println(str)
-	}
-
-	static fn main( args : String[] ) {
-		print("Hello World")
-	}
-}*/
-
-/*
-class PlusFunction
-{
-	static fn ret_va( str:String )->int {
-		System.out.println(str)
-		return str
-	}
-
-	static fn main( args : String[] ) {
-		ret_va("Hello World")
-	}
-}
-*/
 
 /*
 class PlusFunction
@@ -84,23 +72,8 @@ class PlusFunction
 	static fn main( args : String[] ) {
 	}
 }
+
 */
-
-class PlusFunction
-{
-	static fn even?(a:int) {
-		if( a % 2 == 0 ) return true
-		else return false
-	}
-
-	static fn main( args : String[] ) {
-		System.out.println( even?(10) )
-		System.out.println( even?(11) )
-	}
-}
-
-
-
 
 
 

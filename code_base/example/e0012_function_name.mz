@@ -1,0 +1,30 @@
+class FunctionName {
+
+
+	fn even?(a:int) {
+		if( a % 2 == 0 ) return true
+		else return false
+	}
+
+	fn even2?(a:int) :=  a % 2 == 0
+	
+	
+
+	static fn print( str:String ) {
+		System.out.println(str)
+	}
+
+
+    static fn main(args:String[]) {
+
+        obj = FunctionName()
+
+        print("1 even? " + obj.even?(1))
+        print("2 even? " + obj.even?(2))
+ 
+        print("1 even2? " + obj.even2?(1))
+        print("2 even2? " + obj.even2?(2))
+    
+    
+    }
+}
