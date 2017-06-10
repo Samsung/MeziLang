@@ -599,9 +599,10 @@ public class ASTTraverseVisitor implements ParserVisitor, java.io.Serializable, 
       LangUnitNode access_child_node = access_node.getChildren(0);
 
       if (access_child_node.isNodeId(JJTREFERENCE)) {
-        return findRightMostAccessNode(access_child_node);
+    	//NOTE: I cannot remember which case is this..  
+    	return findRightMostAccessNode(access_child_node);
       } else {
-        return access_node;
+    	return access_node;
       }
     } else if (ref_node.jjtGetNumChildren() == 2) { // it has sub reference
       // reference node has sub reference
@@ -609,10 +610,13 @@ public class ASTTraverseVisitor implements ParserVisitor, java.io.Serializable, 
       Debug.assertion(sub_ref_node.isNodeId(JJTSUBREFERENCE), "second child should be sub ref member");
 
       if (sub_ref_node.jjtGetNumChildren() == 1) { // sub reference does not have
-                                                 // its own sub reference
+                                                   // its own sub reference
         /*
-         * Reference / \ Access SubReference / Sub(Map)Access (Right Most Access
-         * Node)
+         *           Reference
+         *               / \
+         *          Access SubReference
+         *                  /
+         *              Sub(Map)Access <-- (Right Most Access Node)
          */
         LangUnitNode sub_access_node = sub_ref_node.getChildren(0);
 
@@ -623,8 +627,15 @@ public class ASTTraverseVisitor implements ParserVisitor, java.io.Serializable, 
       } else if (sub_ref_node.jjtGetNumChildren() == 2) { // sub reference has its
                                                         // own sub reference
         /*
-         * Reference / \ Access SubReference / \ SubReference Sub(Map)Access
-         * (Right Most Access Node) / Sub(Map)Access
+         *         Reference
+         *               / \ 
+         *          Access SubReference
+         *                    / \
+         *         SubReference Sub(Map)Access (Right Most Access Node)
+         *                 / 
+         *            Sub(Map)Access
+         *            
+         *                  * Sub References are rotated by 'rotate_same_type_right_path'
          */
         LangUnitNode sub_access_node = sub_ref_node.getChildren(1);
         Debug.assertion(sub_access_node.isNodeId(JJTSUBACCESS) || sub_access_node.isNodeId(JJTMAPACCESS),

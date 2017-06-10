@@ -528,10 +528,10 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
 
     // assignment target tagging. for assignment target 'access', 'load' will
     // not apply
-    LangUnitNode reference_node = node.getChildren(0);
-    Debug.assertion(reference_node.isNodeId(JJTREFERENCE), "Assingment Lvalue should be reference");
+    LangUnitNode assign_tgt_refnode = node.getChildren(0);
+    Debug.assertion(assign_tgt_refnode.isNodeId(JJTREFERENCE), "Assingment target Lvalue should be reference");
 
-    LangUnitNode rmost_access_node = findRightMostAccessNode(reference_node);
+    LangUnitNode rmost_access_node = findRightMostAccessNode(assign_tgt_refnode);
     Debug.assertion(rmost_access_node != null, "access_node should be valid");
 
     LangUnitNode assignop_node = node.getChildren(1);
@@ -541,8 +541,10 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
     Token assignop_token = assignop_node.getAstToken();
     Debug.assertion(assignop_token != null, "assignop_token should be valid");
 
-    if (assignop_token.kind == ParserConstants.ASSIGN) {
-      rmost_access_node.setAssignTgt(true);
+    switch(assignop_token.kind) {
+    case ParserConstants.DEF_ASSIGN:
+    case ParserConstants.ASSIGN:
+    	rmost_access_node.setAssignTgt(true);
     }
 
     return null;

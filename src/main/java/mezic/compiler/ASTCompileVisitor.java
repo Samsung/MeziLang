@@ -1952,7 +1952,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
           // .. which one is correct ?
           opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, map_type.getMthdDscStr());
 
-          Container anony_map = new Container("anonymous", Container.FORM_OPSTACK_VAR, true, false);
+          Container anony_map = new Container("anonymous", Container.FORM_OPSTACK_VAR, false, false);
           anony_map.initializeType(map_type);
           anony_map.setAssigned(true);
 
@@ -1972,7 +1972,7 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
         AbsType map_ele_type = ((TMapType) src_type).getElementType();
         Debug.assertion(map_ele_type != null, "map_ele_type should be valid");
 
-        Container map_ele_cont = new Container("anonymous", Container.FORM_MAPELEMENT_VAR, true, false);
+        Container map_ele_cont = new Container("anonymous", Container.FORM_MAPELEMENT_VAR, false, false);
         map_ele_cont.initializeType(map_ele_type);
         map_ele_cont.initOwnerContainer(src_cont);
 

@@ -19,6 +19,12 @@ public class Temporal {
 		dv = 1
 
 		System.out.println( dv )		
+
+        const v2 = 10 
+        
+        //v2 = 11
+        
+		System.out.println( v2 )		
 		
 		return true
 	}

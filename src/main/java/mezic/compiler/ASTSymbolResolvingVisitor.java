@@ -1045,6 +1045,11 @@ public class ASTSymbolResolvingVisitor extends ASTTraverseVisitor {
         Container symbol_cont = symbol_node.getContainer();
 
         if (symbol_cont != null && symbol_cont.isForm(Container.FORM_FUNSTACK_VAR)) {
+        	
+          if (symbol_cont.isConstant() && symbol_cont.isAssigned()) {
+        	  throw new CompileException("constant (" + symbol_cont +") cannot be re-assigned", node);
+          }
+        	
           symbol_cont.setAssigned(true);
         }
       }

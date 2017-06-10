@@ -112,11 +112,11 @@ public class OpObjectArray extends OpObject {
       opinfo.mv.visitInsn(Opcodes.AALOAD);
     }
 
-    Container map_ele_cont = new Container("map_element", Container.FORM_MAPELEMENT_VAR, true, false);
+    Container map_ele_cont = new Container("map_element", Container.FORM_MAPELEMENT_VAR, false, false);
     map_ele_cont.initializeType(map_ele_type);
     map_ele_cont.initOwnerContainer(lval);
 
-    Container opstack_ele = new Container("anonymous", Container.FORM_OPSTACK_VAR, true, false);
+    Container opstack_ele = new Container("anonymous", Container.FORM_OPSTACK_VAR, false, false);
     opstack_ele.initializeType(map_ele_type);
     opstack_ele.setAssigned(true);
     opstack_ele.initOwnerContainer(map_ele_cont);
