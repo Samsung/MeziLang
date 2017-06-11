@@ -228,12 +228,8 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
 
     if (owner_func_context != null) {
       // new closure class context is added here
-      class_context = createClosureContext(getTopContext(), node); // overwrite
-                                                                   // class
-                                                                   // context
-                                                                   // with
-                                                                   // closure
-                                                                   // context
+      class_context = createClosureContext(getTopContext(), node); // overwrite context with
+                                                                   // closure context
       Debug.assertion(class_context != null, "class_context should be valid");
 
       pushContext(class_context); // add closure context
@@ -416,87 +412,85 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
     LangUnitNode ref_node = (LangUnitNode) node.jjtGetParent();
 
     if (isNextSubRefChildNodeid(ref_node, JJTINVOKE)) {
-      // if( node.isFunCall() ) {
       /* do nothing - SubSymbolResolvingVisitor will process function call */
       return null;
-    } else {
-      TContext curr_context = getTopContext();
-      Debug.assertion(curr_context != null, "Current context should not be null");
+    }
+    TContext curr_context = getTopContext();
+    Debug.assertion(curr_context != null, "Current context should not be null");
 
-      Token t = symbol_node.getAstToken();
-      int type_specifier_child_idx = symbol_node.getChildIdxWithId(JJTTYPEDEFINE, 0);
-      boolean is_constant = (symbol_node.getVarType() == LangUnitNode.VAR_T_CONST);
-      boolean is_singleton = (symbol_node.getVarType() == LangUnitNode.VAR_T_SINGLETON);
+    Token t = symbol_node.getAstToken();
+    int type_specifier_child_idx = symbol_node.getChildIdxWithId(JJTTYPEDEFINE, 0);
+    boolean is_constant = (symbol_node.getVarType() == LangUnitNode.VAR_T_CONST);
+    boolean is_singleton = (symbol_node.getVarType() == LangUnitNode.VAR_T_SINGLETON);
 
-      Container container = null;
+    Container container = null;
 
-      switch (curr_context.getForm()) {
-      case AbsType.FORM_CLASS:
-        if (type_specifier_child_idx != -1) {
-          // if it has type specifier
-          // duplication checking
-          container = curr_context.getLocalChildVariable(t.image);
-          if (container != null) {
-            throw new CompileException("Type is duplicately defined for " + t.image, node);
-          }
-
-          // register as a class member variable
-          // TODO : is_singleton param should be implemented !!
-          container = new Container(t.image, Container.FORM_OBJMEMBER_VAR, is_constant, is_singleton);
-
-          TContextClass curr_class_context = (TContextClass) curr_context;
-          container.initOwnerContainer(curr_class_context.getTypeContainer());
-
-          curr_context.registerLocalChildVar(container);
-        }
-        break;
-
-      case AbsType.FORM_FUNC:
-      case AbsType.FORM_STREAM:
-
-        if (type_specifier_child_idx != -1) {
-          // it has type specifier
-          // duplicated stack variable checking on local context
-          container = curr_context.getLocalChildVariable(t.image);
-          if (container != null) {
-            throw new CompileException("Type is duplicately defined for " + t.image, node);
-          }
-
-          if (!isValidASTConextForStackVarRegister(node)) {
-            throw new CompileException("Syntax error(variable cannot be declared in branch case one expression)", node);
-          }
-
-          // register as a stack variable
-          container = new Container(t.image, Container.FORM_FUNSTACK_VAR, is_constant, false);
-          curr_context.registerLocalChildVar(container);
-        } else {
-          // no type specifier
-          /*
-           * // find container on context hierarchy( !! not local context )
-           * container = curr_context.getChildVariable(t.image);
-           *
-           * if( container == null ){ if( !
-           * isValidASTConextForStackVarRegister(node) ) { throw new
-           * InterpreterException(
-           * "Syntax error(variable cannot be declared in branch case one expression)"
-           * , node); }
-           *
-           * // register as a stack variable container = new Container(t.image,
-           * Container.FORM_FUNSTACK_VAR, is_constant, false);
-           * curr_context.registerLocalChildVar(container); }
-           */
+    switch (curr_context.getForm()) {
+    case AbsType.FORM_CLASS:
+      if (type_specifier_child_idx != -1) {
+        // if it has type specifier
+        // duplication checking
+        container = curr_context.getLocalChildVariable(t.image);
+        if (container != null) {
+          throw new CompileException("Type is duplicately defined for " + t.image, node);
         }
 
-        break;
+        // register as a class member variable
+        // TODO : is_singleton param should be implemented !!
+        container = new Container(t.image, Container.FORM_OBJMEMBER_VAR, is_constant, is_singleton);
 
-      case AbsType.FORM_TU:
-        throw new CompileException("Translation Unit Access is not implemented");
-      default:
-        throw new CompileException("Undefined Context Type(" + curr_context.getForm() + ")");
+        TContextClass curr_class_context = (TContextClass) curr_context;
+        container.initOwnerContainer(curr_class_context.getTypeContainer());
+
+        curr_context.registerLocalChildVar(container);
+      }
+      break;
+
+    case AbsType.FORM_FUNC:
+    case AbsType.FORM_STREAM:
+
+      if (type_specifier_child_idx != -1) {
+        // it has type specifier
+        // duplicated stack variable checking on local context
+        container = curr_context.getLocalChildVariable(t.image);
+        if (container != null) {
+          throw new CompileException("Type is duplicately defined for " + t.image, node);
+        }
+
+        if (!isValidASTConextForStackVarRegister(node)) {
+          throw new CompileException("Syntax error(variable cannot be declared in branch case one expression)", node);
+        }
+
+        // register as a stack variable
+        container = new Container(t.image, Container.FORM_FUNSTACK_VAR, is_constant, false);
+        curr_context.registerLocalChildVar(container);
+      } else {
+        // no type specifier
+        /*
+         * // find container on context hierarchy( !! not local context )
+         * container = curr_context.getChildVariable(t.image);
+         *
+         * if( container == null ){ if( !
+         * isValidASTConextForStackVarRegister(node) ) { throw new
+         * InterpreterException(
+         * "Syntax error(variable cannot be declared in branch case one expression)"
+         * , node); }
+         *
+         * // register as a stack variable container = new Container(t.image,
+         * Container.FORM_FUNSTACK_VAR, is_constant, false);
+         * curr_context.registerLocalChildVar(container); }
+         */
       }
 
-      return null;
+      break;
+
+    case AbsType.FORM_TU:
+      throw new CompileException("Translation Unit Access is not implemented");
+    default:
+      throw new CompileException("Undefined Context Type(" + curr_context.getForm() + ")");
     }
+
+    return null;
 
   }
 
