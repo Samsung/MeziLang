@@ -631,12 +631,17 @@ public class ASTSymbolResolvingVisitor extends ASTTraverseVisitor {
       // Typedefine node index(if it does not have, it will be '-1')
       TContext curr_context = getTopContext();
       int type_specifier_child_idx = access_child_node.getChildIdxWithId(JJTTYPEDEFINE, 0);
-      boolean is_constant = (access_child_node.getVarType() == LangUnitNode.VAR_T_CONST);
+      boolean is_immutable = (access_child_node.getVarType() == LangUnitNode.VAR_T_IMMUTABLE);
 
       // search variable from current context
       Container symbol_cont = getTopContext().getChildVariable(t.image);
 
       if (symbol_cont != null) {
+    	 
+    	if (is_immutable) {
+            throw new CompileException("Initialized variable cannot be designated as immutable", node);
+    	}
+    	  
         // here, access symbol_cont is valid
         if (symbol_cont.isForm(Container.FORM_OBJMEMBER_VAR)) {
           TContext cont_context = symbol_cont.getContext();
@@ -658,7 +663,7 @@ public class ASTSymbolResolvingVisitor extends ASTTraverseVisitor {
         } else {
           // do nothing...
         }
-      } else { // it is not variable, but package or class
+      } else {
         // constant assign type initialization
         if (node.isAssignTgt()) {
 
@@ -667,7 +672,7 @@ public class ASTSymbolResolvingVisitor extends ASTTraverseVisitor {
           }
 
           // register as a stack variable
-          symbol_cont = new Container(t.image, Container.FORM_FUNSTACK_VAR, is_constant, false);
+          symbol_cont = new Container(t.image, Container.FORM_FUNSTACK_VAR, is_immutable, false);
           curr_context.registerLocalChildVar(symbol_cont);
 
           // type will be initialized in SubSymbol Resolving Assignment

@@ -1,45 +1,11 @@
 
-//import java.util.*
-import java.util.LinkedList
-
-public class Temporal {
-
-	public fn test()->boolean {
-		
-		list = LinkedList()
-		
-		fv:float = 0.1F
-	
-		fv = 1
-		
-		System.out.println( fv )		
-	
-		dv = double = 0.1D
-		
-		dv = 1
-
-		System.out.println( dv )		
-
-        const v2 = 10 
-        
-        //v2 = 11
-        
-		System.out.println( v2 )		
-		
-		return true
-	}
-	
-}
-
 class TemporalTest {
 
 	static fn main(args: String[] ) {
 	
-		System.out.println("\n\n### TemoporalTest")
-	
-		t = Temporal()
+        a := 10
 		
-        t.test()	
+		System.out.println(a)
 	}
 
 }

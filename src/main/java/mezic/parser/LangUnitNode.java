@@ -492,12 +492,12 @@ public class LangUnitNode extends SimpleNode implements ParserTreeConstants {
 
   /* For SymbolName Node */
 
-  public final static int VAR_T_VAR = 0;
-  public final static int VAR_T_CONST = 1;
+  public final static int VAR_T_VARIABLE = 0;
+  public final static int VAR_T_IMMUTABLE = 1;
   public final static int VAR_T_SINGLETON = 2;
   public final static int VAR_T_INTERFACE = 3;
 
-  private int var_type = VAR_T_VAR; // default
+  private int var_type = VAR_T_VARIABLE; // default
 
   public void setVarType(int type) {
     this.var_type = type;

@@ -420,7 +420,7 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
 
     Token t = symbol_node.getAstToken();
     int type_specifier_child_idx = symbol_node.getChildIdxWithId(JJTTYPEDEFINE, 0);
-    boolean is_constant = (symbol_node.getVarType() == LangUnitNode.VAR_T_CONST);
+    boolean is_immutable = (symbol_node.getVarType() == LangUnitNode.VAR_T_IMMUTABLE);
     boolean is_singleton = (symbol_node.getVarType() == LangUnitNode.VAR_T_SINGLETON);
 
     Container container = null;
@@ -437,7 +437,7 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
 
         // register as a class member variable
         // TODO : is_singleton param should be implemented !!
-        container = new Container(t.image, Container.FORM_OBJMEMBER_VAR, is_constant, is_singleton);
+        container = new Container(t.image, Container.FORM_OBJMEMBER_VAR, is_immutable, is_singleton);
 
         TContextClass curr_class_context = (TContextClass) curr_context;
         container.initOwnerContainer(curr_class_context.getTypeContainer());
@@ -462,7 +462,7 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
         }
 
         // register as a stack variable
-        container = new Container(t.image, Container.FORM_FUNSTACK_VAR, is_constant, false);
+        container = new Container(t.image, Container.FORM_FUNSTACK_VAR, is_immutable, false);
         curr_context.registerLocalChildVar(container);
       } else {
         // no type specifier
@@ -537,6 +537,13 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
 
     switch(assignop_token.kind) {
     case ParserConstants.DEF_ASSIGN:
+    	// This one can cover just only for immutable stack variable
+    	// This can not cover immutable class member variable
+        LangUnitNode access_child_node = (LangUnitNode) rmost_access_node.jjtGetChild(0);
+        Debug.assertion(access_child_node != null, "first child should not be null");
+        if (access_child_node.isNodeId(JJTSYMBOLNAME)) {
+        	access_child_node.setVarType(LangUnitNode.VAR_T_IMMUTABLE);
+        }
     case ParserConstants.ASSIGN:
     	rmost_access_node.setAssignTgt(true);
     }

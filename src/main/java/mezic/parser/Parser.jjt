@@ -412,8 +412,8 @@ void SymbolNameExpression() #SymbolName : { Token t = null; }
 	(
 		[ AccessCtrlExpression() ]
 		[
-				<VAR>       { jjtThis.setVarType(LangUnitNode.VAR_T_VAR); }
-			|	<CONST>     { jjtThis.setVarType(LangUnitNode.VAR_T_CONST); }
+				<VAR>       { jjtThis.setVarType(LangUnitNode.VAR_T_VARIABLE); }
+			|	<CONST>     { jjtThis.setVarType(LangUnitNode.VAR_T_IMMUTABLE); }
 			|	<SINGLETON> { jjtThis.setVarType(LangUnitNode.VAR_T_SINGLETON); }
 			|	<INTERFACE> { jjtThis.setVarType(LangUnitNode.VAR_T_INTERFACE); }
 		]

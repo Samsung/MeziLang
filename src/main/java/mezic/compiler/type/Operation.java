@@ -54,6 +54,7 @@ public class Operation extends Reduction {
     case ParserConstants.AND_ASSIGN:
     case ParserConstants.EXCLU_OR_ASSIGN:
     case ParserConstants.INCLU_OR_ASSIGN:
+    case ParserConstants.DEF_ASSIGN:	
 
       /* fundamental operation */
     case ParserConstants.PLUS:
@@ -351,6 +352,7 @@ public class Operation extends Reduction {
 
     try {
       switch (opcode) {
+      case ParserConstants.DEF_ASSIGN: // ':='
       case ParserConstants.ASSIGN: // '='
 
         Debug.assertion(!lvalue.isForm(Container.FORM_OPSTACK_VAR),
