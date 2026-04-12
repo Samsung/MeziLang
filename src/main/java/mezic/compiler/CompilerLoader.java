@@ -67,6 +67,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
 
   public final static String TU_FILENAME_EXTENSION = ".mz";
   public final static String JAR_FILENAME_EXTENSION = ".jar";
+  public final static String JMOD_FILENAME_EXTENSION = ".jmod";
   public final static String CLASS_FILENAME_EXTENSION = ".class";
   public final static String NODE_FILENAME_EXTENSION = ".node";
   public final static String COMPILER_PKG_DELIMETER = "/";
@@ -121,7 +122,7 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
 
     this.jarcache_hash = new HashMap<String, JarFileCache>();
     for (String cl_path : class_pathes) {
-      if (cl_path.endsWith(JAR_FILENAME_EXTENSION)) {
+      if (cl_path.endsWith(JAR_FILENAME_EXTENSION) || cl_path.endsWith(JMOD_FILENAME_EXTENSION)) {
         try {
           jarcache_hash.put(cl_path, new JarFileCache(cl_path));
         } catch (IOException e) {
@@ -355,7 +356,8 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
           this.fspkg_hash.put(pkg_name, fspkg);
           return fspkg;
         }
-      } else if (cp_base_file.getName().endsWith(JAR_FILENAME_EXTENSION)) {
+      } else if (cp_base_file.getName().endsWith(JAR_FILENAME_EXTENSION)
+          || cp_base_file.getName().endsWith(JMOD_FILENAME_EXTENSION)) {
         final String pkg_path = pkg_name.replace('.', DIR_DELIMETER_CHAR);
 
         LOG.debug(
@@ -632,10 +634,11 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
 
           return cn;
         }
-      } else if (cp_base_file.getName().endsWith(JAR_FILENAME_EXTENSION)) {
+      } else if (cp_base_file.getName().endsWith(JAR_FILENAME_EXTENSION)
+          || cp_base_file.getName().endsWith(JMOD_FILENAME_EXTENSION)) {
         class_path = full_class_name + CLASS_FILENAME_EXTENSION;
-        LOG.debug(
-            "Finding Resolved Class File(" + class_path + ") from jar(" + cp_base_file.getAbsolutePath() + ")");
+        LOG.debug("Finding Resolved Class File(" + class_path + ") from archive(" + cp_base_file.getAbsolutePath()
+            + ")");
 
         try {
           JarFileCache jarcache = this.jarcache_hash.get(class_pathes[i]);

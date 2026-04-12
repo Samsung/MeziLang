@@ -1,0 +1,31 @@
+# Maven / Java build output
+/target/
+*.class
+
+# Runtime output
+log4j-application.log
+
+# Locally compiled Mezi output
+/path/
+!/path/dummy.txt
+
+# Local tooling artifacts
+/.codex
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+
+# JavaCC / JJTree generated parser sources
+/src/main/java/mezic/parser/Parser.jj
+/src/main/java/mezic/parser/Parser.java
+/src/main/java/mezic/parser/ParserConstants.java
+/src/main/java/mezic/parser/ParserTokenManager.java
+/src/main/java/mezic/parser/ParserTreeConstants.java
+/src/main/java/mezic/parser/ParserVisitor.java
+/src/main/java/mezic/parser/ParserDefaultVisitor.java
+/src/main/java/mezic/parser/JJTParserState.java
+/src/main/java/mezic/parser/JavaCharStream.java
+/src/main/java/mezic/parser/ParseException.java
+/src/main/java/mezic/parser/TokenMgrError.java
+/src/main/java/mezic/parser/AST*.java

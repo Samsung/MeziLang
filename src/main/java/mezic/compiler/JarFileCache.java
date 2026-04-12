@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.jar.JarFile;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 
 import mezic.util.PathUtil;
@@ -14,19 +14,29 @@ public class JarFileCache {
 
   @SuppressWarnings("unused")
   private String name;
-  private JarFile jar_file;
+  private ZipFile jar_file;
   private HashSet<String> pkg_set = new HashSet<>();
+  private final boolean jmodFile;
 
   public JarFileCache(String name) throws FileNotFoundException, IOException {
     this.name = name;
-    jar_file = new JarFile(new File(name));
+    this.jmodFile = name.endsWith(".jmod");
+    jar_file = new ZipFile(new File(name));
 
     /*
      * jar_file.stream().forEach( (entry)->pkg_set.add( PathUtil.getPkgName(
      * entry.getName() ) ) );
      */
     jar_file.stream().forEach((entry) -> {
-      PathUtil.getSubPkgNames(entry.getName(), "/").stream().forEach((sub_pkg) -> {
+      String entryName = entry.getName();
+      if (jmodFile) {
+        if (!entryName.startsWith("classes/")) {
+          return;
+        }
+        entryName = entryName.substring("classes/".length());
+      }
+
+      PathUtil.getSubPkgNames(entryName, "/").stream().forEach((sub_pkg) -> {
         /* out.println(sub_pkg); */ pkg_set.add(sub_pkg);
       });
     });
@@ -34,6 +44,10 @@ public class JarFileCache {
   }
 
   public InputStream getClassInputStream(String class_path) throws IOException {
+    if (jmodFile) {
+      class_path = "classes/" + class_path;
+    }
+
     ZipEntry zip_entry = jar_file.getEntry(class_path);
 
     if (zip_entry == null) {

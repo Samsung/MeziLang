@@ -8,21 +8,22 @@
   
   <properties>
     <javaVersion>1.8</javaVersion>
-    <asmVersion>5.0.3</asmVersion>
+    <asmVersion>9.8</asmVersion>
     <slf4jVersion>1.7.22</slf4jVersion>
     <log4jVersion>1.2.16</log4jVersion>
+    <parserDir>${project.basedir}/src/main/java/mezic/parser</parserDir>
   </properties>
   
   
   <dependencies>
 	<dependency>
 	    <groupId>org.ow2.asm</groupId>
-	    <artifactId>asm-all</artifactId>
+	    <artifactId>asm</artifactId>
 	    <version>${asmVersion}</version>
 	</dependency>
 	<dependency>
 	    <groupId>org.ow2.asm</groupId>
-	    <artifactId>asm-debug-all</artifactId>
+	    <artifactId>asm-tree</artifactId>
 	    <version>${asmVersion}</version>
 	</dependency>
 	<dependency>
@@ -40,6 +41,41 @@
   
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>generate-parser-jjtree</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${parserDir}</workingDirectory>
+              <executable>jjtree</executable>
+              <arguments>
+                <argument>Parser.jjt</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-parser-javacc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${parserDir}</workingDirectory>
+              <executable>javacc</executable>
+              <arguments>
+                <argument>Parser.jj</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

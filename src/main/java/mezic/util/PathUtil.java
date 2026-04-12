@@ -2,9 +2,12 @@ package mezic.util;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import mezic.compiler.CompileException;
 
@@ -222,15 +225,45 @@ public class PathUtil {
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public static void executeMain(String[] classes) {
-    Arrays.stream(classes).forEach(strClass -> {
-      try {
-        Class testClass = Class.forName(strClass);
-        Method meth = testClass.getMethod("main", String[].class);
-        meth.invoke(null, (Object) null);
-      } catch (Exception e) {
-        e.printStackTrace();
+    URLClassLoader generatedClassLoader = null;
+
+    try {
+      File generatedDir = new File("path");
+      if (generatedDir.isDirectory()) {
+        generatedClassLoader = new URLClassLoader(new URL[] { generatedDir.toURI().toURL() },
+            PathUtil.class.getClassLoader());
       }
-    });
+
+      final URLClassLoader finalGeneratedClassLoader = generatedClassLoader;
+      Arrays.stream(classes).forEach(strClass -> {
+        try {
+          Class testClass;
+          try {
+            testClass = Class.forName(strClass);
+          } catch (ClassNotFoundException e) {
+            if (finalGeneratedClassLoader == null) {
+              throw e;
+            }
+            testClass = Class.forName(strClass, true, finalGeneratedClassLoader);
+          }
+
+          Method meth = testClass.getMethod("main", String[].class);
+          meth.invoke(null, (Object) null);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      if (generatedClassLoader != null) {
+        try {
+          generatedClassLoader.close();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    }
 
   }
   
@@ -240,10 +273,36 @@ public class PathUtil {
 			  File.separator + "lib" + File.separator + "rt.jar");
 	  
 	  if (!rtFile.exists()) {
-		  return null;
+		  String[] runtimeClassPaths = getJavaRuntimeClassPaths();
+		  if (runtimeClassPaths.length == 0) {
+			  return null;
+		  }
+		  return runtimeClassPaths[0];
 	  }
 	  
 	  return rtFile.getAbsolutePath();
+  }
+
+  public static String[] getJavaRuntimeClassPaths() {
+    File javaHome = new File(System.getProperty("java.home"));
+    File rtFile = new File(javaHome, "lib" + File.separator + "rt.jar");
+
+    if (rtFile.exists()) {
+      return new String[] { rtFile.getAbsolutePath() };
+    }
+
+    File jmodsDir = new File(javaHome, "jmods");
+    if (jmodsDir.isDirectory()) {
+      File[] jmodFiles = jmodsDir.listFiles((dir, name) -> name.endsWith(".jmod"));
+      if (jmodFiles != null && jmodFiles.length > 0) {
+        return Stream.of(jmodFiles)
+            .map(File::getAbsolutePath)
+            .sorted()
+            .toArray(String[]::new);
+      }
+    }
+
+    return new String[0];
   }
 
 }
