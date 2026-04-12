@@ -12,6 +12,7 @@
     <slf4jVersion>1.7.22</slf4jVersion>
     <log4jVersion>1.2.16</log4jVersion>
     <parserDir>${project.basedir}/src/main/java/mezic/parser</parserDir>
+    <generatedParserDir>${project.build.directory}/generated-sources/javacc</generatedParserDir>
   </properties>
   
   
@@ -56,6 +57,7 @@
               <workingDirectory>${parserDir}</workingDirectory>
               <executable>jjtree</executable>
               <arguments>
+                <argument>-OUTPUT_DIRECTORY=${generatedParserDir}</argument>
                 <argument>Parser.jjt</argument>
               </arguments>
             </configuration>
@@ -67,11 +69,51 @@
               <goal>exec</goal>
             </goals>
             <configuration>
-              <workingDirectory>${parserDir}</workingDirectory>
+              <workingDirectory>${generatedParserDir}</workingDirectory>
               <executable>javacc</executable>
               <arguments>
+                <argument>-OUTPUT_DIRECTORY=${generatedParserDir}</argument>
                 <argument>Parser.jj</argument>
               </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>remove-overlapping-generated-files</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target>
+                <delete file="${generatedParserDir}/Node.java" quiet="true" />
+                <delete file="${generatedParserDir}/SimpleNode.java" quiet="true" />
+                <delete file="${generatedParserDir}/Token.java" quiet="true" />
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <id>add-generated-parser-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${generatedParserDir}</source>
+              </sources>
             </configuration>
           </execution>
         </executions>

@@ -38,6 +38,14 @@ This now performs the full parser generation and Java compilation flow automatic
 2. `javacc Parser.jj`
 3. Java compilation through Maven
 
+This assumes the `jjtree` and `javacc` command-line tools are already installed
+and available on `PATH`. On Ubuntu, you can install them with:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y maven javacc
+```
+
 If Maven cannot write to the default local repository in your environment, you can override it:
 
 ```bash
@@ -113,7 +121,10 @@ This is handled automatically by the test drivers and compiler runtime utilities
 
 ## Notes About Generated Parser Files
 
-Parser files under `src/main/java/mezic/parser/` such as:
+Parser files are generated from `src/main/java/mezic/parser/Parser.jjt`
+into `target/generated-sources/javacc/`.
+
+Generated files include:
 
 - `Parser.jj`
 - `Parser.java`
