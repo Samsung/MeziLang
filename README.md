@@ -14,6 +14,13 @@ Mezi is interested in the followings.
 ## Getting Started
 [Building Mezi compiler & Helloworld example](BUILD.md)
 
+## Build Notes
+The project can be built with a modern JDK and Maven.
+
+- `mvn compile` automatically runs JJTree and JavaCC for `src/main/java/mezic/parser/Parser.jjt`
+- Example runners under `src/main/java/mezic/test` work on both Java 8-style `rt.jar` layouts and Java 9+ `jmod` layouts
+- The current documented flow has been verified with JDK 25
+
 ## Example Mezi code
 
 1. [Simple grammar examples](https://github.com/Samsung/MeziLang/tree/master/code_base/example)

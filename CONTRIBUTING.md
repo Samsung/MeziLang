@@ -1,7 +1,62 @@
 # Contribution Guidelines
+
+## Development Setup
+
+Before opening a pull request, make sure you can build the project locally.
+
+### Requirements
+
+1. Install a JDK
+   - The current build has been verified with JDK 25
+2. Install Maven
+3. Install JavaCC tools so that these commands are available on `PATH`
+   - `jjtree`
+   - `javacc`
+
+On Ubuntu, for example:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y maven javacc
+```
+
+### Build
+
+From the project root:
+
+```bash
+mvn compile
+```
+
+`mvn compile` automatically regenerates the parser sources from
+`src/main/java/mezic/parser/Parser.jjt` before compiling Java sources.
+The Eclipse JavaCC plugin is no longer required for normal builds.
+
+### Recommended Verification
+
+If your change affects the compiler, parser, runtime support, or examples, run the example drivers before submitting a patch.
+
+Build the runtime classpath file:
+
+```bash
+mvn -q dependency:build-classpath -Dmdep.outputFile=/tmp/mezi.cp
+```
+
+Run the Hello World driver:
+
+```bash
+java -cp target/classes:$(cat /tmp/mezi.cp) mezic.test.CompileHelloworld
+```
+
+Run the bundled example suite:
+
+```bash
+java -cp target/classes:$(cat /tmp/mezi.cp) mezic.test.CompileExamples
+```
+
 ## Patch Submission Process
 
-The following guidelines on the submission process are provided to help you be more effective when submitting code to the JerryScript project.
+The following guidelines on the submission process are provided to help you be more effective when submitting code to the Mezi language project.
 
 When development is complete, a patch set should be submitted via GitHub pull requests. A review of the patch set will take place. When accepted, the patch set will be integrated into the master branch, verified, and tested. It is then the responsibility of the authoring developer to maintain the code throughout its lifecycle.
 
@@ -94,7 +149,7 @@ commit_msg_filepath = sys.argv[1]
 with open(commit_msg_filepath, "r+") as f:
 	content = f.read()
 	f.seek(0, 0)
-	f.write("%s\n\nJerryScript-DCO-1.0-Signed-off-by: <Your Name> <Your Email>" % content)
+	f.write("%s\n\nMeziLanguage-DCO-1.0-Signed-off-by: <Your Name> <Your Email>" % content)
 ```
 
 Please refer [Git Hooks](http://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) for more information.
