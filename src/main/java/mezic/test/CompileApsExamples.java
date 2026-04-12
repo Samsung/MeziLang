@@ -9,21 +9,22 @@ import mezic.util.PathUtil;
 public class CompileApsExamples {
   public static void main(String[] args) {
 
-	String rtPath = PathUtil.getJavaRtPath();
-	if (rtPath == null) {
-		System.out.println("It cannot find path of rt.jar");
+	String[] runtimeClassPaths = PathUtil.getJavaRuntimeClassPaths();
+	if (runtimeClassPaths.length == 0) {
+		System.out.println("It cannot find Java runtime class path");
 		return;
 	}  
-	  
+
+    String[] compilerClassPaths = new String[runtimeClassPaths.length + 2];
+    compilerClassPaths[0] = "path/";
+    System.arraycopy(runtimeClassPaths, 0, compilerClassPaths, 1, runtimeClassPaths.length);
+    compilerClassPaths[compilerClassPaths.length - 1] = "target/classes/";
+
     Compiler runner = new Compiler.Builder()
     		.setPrintout(System.out)
     		.setSourcebase("code_base/")
     		.setTargetbase("path/")
-            .setClasspathes(new String[] {
-            		"path/",
-            		rtPath,
-            		"target/classes/",
-            		})
+            .setClasspathes(compilerClassPaths)
             .setDfltImportpkgs(new String[] {
             		"java/lang",
             		}).build();
