@@ -246,7 +246,7 @@ public class ASTContextBuildVisitor extends ASTTraverseVisitor {
         throw new CompileException(
             "Function Name cannot start with '" + TContextClass.ANONYFUN_PREFIX + "' explicityly", node);
       }
-      func_name = t.image;
+      func_name = cpLoader.normalizeOperatorFunctionName(t.image);
     } else {
       func_name = class_context.allocAnonyFuncName();
     }

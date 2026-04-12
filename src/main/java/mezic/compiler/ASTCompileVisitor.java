@@ -1770,7 +1770,8 @@ public class ASTCompileVisitor extends ASTTraverseVisitor {
 
       if (((AbsFuncType) functiontype).is_static()) {
         //// Compiled Instruction
-        mv.visitMethodInsn(Opcodes.INVOKESTATIC, classType.getName(), functiontype.getName(), mthdDsc, false);
+        mv.visitMethodInsn(Opcodes.INVOKESTATIC, classType.getName(), functiontype.getName(), mthdDsc,
+            ((AbsClassType) classType).isInterface());
         //// End
       } else if (((AbsClassType) classType).isInterface()) {
         //// Compiled Instruction
