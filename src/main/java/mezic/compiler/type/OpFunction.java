@@ -134,7 +134,7 @@ public class OpFunction extends OpObject {
     String constructor_sig = "(" + TMethodHandle.METHODHANDLE_CLASS_DESC + ")V";
     opinfo.mv.visitMethodInsn(Opcodes.INVOKESPECIAL, func_if_impl_type.getName(), "<init>", constructor_sig, false);
 
-    opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, ((AbsType) tgt_if_type).getMthdDscStr());
+    opinfo.mv.visitTypeInsn(Opcodes.CHECKCAST, ((AbsType) tgt_if_type).getName());
 
     // Debug.stop();
   }

@@ -151,9 +151,19 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
   }
 
   private void init_opfuncmap_hash() {
-    this.opfuncmap_hash.put("+", "__plus__");
-    this.opfuncmap_hash.put("-", "__minus__");
-    this.opfuncmap_hash.put("[]", "__map__");
+    this.opfuncmap_hash.put("+", "__anonymous_op_plus__");
+    this.opfuncmap_hash.put("-", "__anonymous_op_minus__");
+    this.opfuncmap_hash.put("[]", "__anonymous_op_map__");
+    this.opfuncmap_hash.put("[]=", "__anonymous_op_map_assign__");
+  }
+
+  public String normalizeOperatorFunctionName(String name) {
+    if (name == null) {
+      return null;
+    }
+
+    String normalizedName = this.opfuncmap_hash.get(name);
+    return normalizedName != null ? normalizedName : name;
   }
 
   protected void check_condition(boolean condition, String statement) throws CompileException {
@@ -704,8 +714,8 @@ public class CompilerLoader extends ClassLoader implements java.io.Serializable 
     func_type = (AbsType) ((AbsClassType) class_type).getLocalFunction(name, argtype_list);
 
     if (func_type == null) {
-      String opfunc_name = this.opfuncmap_hash.get(name);
-      if (opfunc_name != null) {
+      String opfunc_name = normalizeOperatorFunctionName(name);
+      if (opfunc_name != null && !opfunc_name.equals(name)) {
         func_type = (AbsType) ((AbsClassType) class_type).getLocalFunction(opfunc_name, argtype_list);
       }
     }

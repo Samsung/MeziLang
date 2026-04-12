@@ -2,7 +2,7 @@ package mezi.lang;
 
 public class Apply extends UnresolvedType {
 
-	public Apply __plus__(Apply b) {
+	public Apply __anonymous_op_plus__(Apply b) {
 		return null;
 	}
 
@@ -13,7 +13,7 @@ public class Apply extends UnresolvedType {
 	}
 	*/
 
-	public Apply __minus__(Apply b) {
+	public Apply __anonymous_op_minus__(Apply b) {
 		return null;
 	}
 

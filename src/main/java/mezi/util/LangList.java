@@ -37,7 +37,7 @@ public class LangList extends LinkedList<Object> {
 	}
 
 
-	public LangList __plus__(LangList rlist) {
+	public LangList __anonymous_op_plus__(LangList rlist) {
 		LangList newlist = new LangList();
 
 		int size = this.size();
@@ -56,7 +56,7 @@ public class LangList extends LinkedList<Object> {
 	}
 
 
-	public Object __map__(int i) {
+	public Object __anonymous_op_map__(int i) {
 		return get(i);
 	}
 
