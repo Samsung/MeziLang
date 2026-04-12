@@ -111,11 +111,11 @@ public class OpObject implements OpLvalue {
 
     case Container.FORM_OBJMEMBER_VAR:
       if (lval.isSingleton()) {
-        // duplicate the value on top of the stack (value2, value1 ¡æ value1,
+        // duplicate the value on top of the stack (value2, value1 -> value1,
         // value2, value1)
         rvalue.getType().op().dup(rvalue, opinfo);
       } else {
-        // duplicate the value on top of the stack (value2, value1 ¡æ value1,
+        // duplicate the value on top of the stack (value2, value1 -> value1,
         // value2, value1)
         rvalue.getType().op().dup_x1(rvalue, opinfo);
       }

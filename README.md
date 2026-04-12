@@ -17,7 +17,9 @@ Mezi is interested in the followings.
 ## Build Notes
 The project can be built with a modern JDK and Maven.
 
-- `mvn compile` automatically runs JJTree and JavaCC for `src/main/java/mezic/parser/Parser.jjt`
+- `mvn compile` automatically runs JJTree and JavaCC for `src/main/java/mezic/parser/Parser.jjt`, assuming the `jjtree` and `javacc` tools are installed
+- On Ubuntu, you can install those tools with `sudo apt-get update && sudo apt-get install -y maven javacc`
+- Generated parser sources are written under `target/generated-sources/javacc`
 - Example runners under `src/main/java/mezic/test` work on both Java 8-style `rt.jar` layouts and Java 9+ `jmod` layouts
 - The current documented flow has been verified with JDK 25
 

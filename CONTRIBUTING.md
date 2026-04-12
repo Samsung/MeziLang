@@ -29,7 +29,9 @@ mvn compile
 ```
 
 `mvn compile` automatically regenerates the parser sources from
-`src/main/java/mezic/parser/Parser.jjt` before compiling Java sources.
+`src/main/java/mezic/parser/Parser.jjt` into
+`target/generated-sources/javacc/` before compiling Java sources, assuming
+the `jjtree` and `javacc` tools are installed and available on `PATH`.
 The Eclipse JavaCC plugin is no longer required for normal builds.
 
 ### Recommended Verification
